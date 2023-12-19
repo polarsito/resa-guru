@@ -7,24 +7,15 @@ import {
   hasPlayer,
   playerExists,
 } from '@lib/utils/players';
-import { RGEmbed } from '@lib/structures/RGEmbed';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
-import { getPlayerCard } from '@lib/utils/getPlayerCard';
 import type { PlayerData } from 'types/PlayerData';
+import { ButtonInteraction, Interaction } from 'discord.js';
+
 import {
-  ButtonInteraction,
-  ButtonStyle,
-  Colors,
-  Interaction,
-  Message,
-} from 'discord.js';
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  EmbedBuilder,
-} from '@discordjs/builders';
-import { toLocaleString } from '@lib/utils/toLocaleString';
+  getPaginationButtonsRow,
+  playerPagination,
+} from '@lib/utils/paginations';
 
 @ApplyOptions<Command.Options>({
   name: 'show',
@@ -93,75 +84,21 @@ export class ShowCommand extends Command {
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
-    let reply: Message;
-    let row: ActionRowBuilder<ButtonBuilder>;
-    const embeds: EmbedBuilder[] = [];
-    if (players.length === 1) {
-      const player = players[0];
-      const cardImage = await getPlayerCard(player);
+    const embeds = playerPagination(players, {
+      title: `${await resolveKey(interaction, LanguageKeys.Utils.OwnedBy)} ${
+        interaction.user.tag
+      }`,
+      description: `\`Value: {playerValue}\`\n\`Position: {playerPosition}\``,
+    });
 
-      const embed = new RGEmbed(interaction.user)
-        .setImage(cardImage)
-        .setDescription(
-          `\`${await resolveKey(
-            interaction,
-            LanguageKeys.Utils.Value
-          )} ${toLocaleString(player.value)}\`\n\`${await resolveKey(
-            interaction,
-            LanguageKeys.Utils.Position
-          )}: ${player.position}\``
-        )
-        .setTitle(
-          `${await resolveKey(interaction, LanguageKeys.Utils.OwnedBy)} ${
-            interaction.user.tag
-          }`
-        );
+    const row = getPaginationButtonsRow();
 
-      reply = await interaction.editReply({
-        embeds: [embed],
-      });
-    } else {
-      row = new ActionRowBuilder<ButtonBuilder>().setComponents(
-        new ButtonBuilder()
-          .setCustomId('back')
-          .setLabel('◄')
-          .setDisabled(true)
-          .setStyle(ButtonStyle.Secondary),
+    const reply = await interaction.editReply({
+      embeds: [embeds[0]],
+      components: [row],
+    });
 
-        new ButtonBuilder()
-          .setCustomId('next')
-          .setLabel('►')
-          .setStyle(ButtonStyle.Secondary)
-      );
-
-      for (const player of players) {
-        const cardImage = await getPlayerCard(player);
-        embeds.push(
-          new EmbedBuilder()
-            .setColor(Colors.White)
-            .setImage(cardImage)
-            .setDescription(
-              `\`Value: ${toLocaleString(player.value)}\`\n\`Position: ${
-                player.position
-              }\``
-            )
-            .setTitle(
-              `${await resolveKey(interaction, LanguageKeys.Utils.OwnedBy)} ${
-                interaction.user.tag
-              }`
-            )
-            .setFooter({
-              iconURL: interaction.user.displayAvatarURL(),
-              text: `Page ${players.indexOf(player) + 1}/${players.length}`,
-            })
-        );
-      }
-
-      reply = await interaction.editReply({
-        embeds: [embeds[0]],
-        components: [row],
-      });
-
+    if (embeds.length > 1) {
       const collector = reply.createMessageComponentCollector({
         idle: 1000 * 30,
         filter: (i: Interaction) => i.user.id === interaction.user.id,
