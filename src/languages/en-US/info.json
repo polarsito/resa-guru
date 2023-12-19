@@ -4,9 +4,9 @@
     "BOT_INFO": "Bot information",
     "BOT_INFO_VALUE": "> Uptime: {uptime}\n> Bot/API Latency: ${latency}ms",
     "BOT_PROCESS_INFO": "Bot process information",
-    "BOT_PROCESS_INFO_VALUE": "> RAM Usage: {ramUsage}MB\n> CPU Usage: {cpuUsage}%\n> Environment: NodeJS (18.14.2)",
+    "BOT_PROCESS_INFO_VALUE": "> RAM Usage: {ramUsage}MB\n> CPU Usage: {cpuUsage}%\n> Environment: NodeJS (20.10.0)",
     "EXTRA_INFO": "Extra information",
-    "EXTRA_INFO_VALUE": "> Support server: [Click Here]({guildLink})\n> Owners: sashie#8383 & punz#8964",
+    "EXTRA_INFO_VALUE": "> Support server: [Click Here]({guildLink})\n> Owners: <@247754038068772864> & <@796912511898222656>",
     "GURU_HELP": "RESA Guru Help",
     "USE_INFO": "You can use `/info` to see more bot information"
 }

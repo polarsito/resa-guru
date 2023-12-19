@@ -6,6 +6,7 @@ import { getRealTime } from '@lib/utils/getRealTime';
 import os from 'os';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
+import { RGEmbed } from '@lib/structures/RGEmbed';
 
 @ApplyOptions<Command.Options>({
   name: 'info',
@@ -44,8 +45,7 @@ export class FaqsCommand extends Command {
     const currentCpuUsage = (usage.user + usage.system) / 1000;
     const perc = (currentCpuUsage / total) * 100;
 
-    const embed = new EmbedBuilder()
-      .setColor(Colors.White)
+    const embed = new RGEmbed()
       .setThumbnail(this.container.client.user!.displayAvatarURL())
       .setAuthor({
         name: await resolveKey(
