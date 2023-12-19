@@ -1,5 +1,5 @@
 import { container, SapphireClient } from '@sapphire/framework';
-import path, { join } from 'path';
+import { join } from 'path';
 import Database from '@lib/structures/Database';
 import type { InternationalizationContext } from '@sapphire/plugin-i18next';
 import { UtilsGDrive } from 'utils-google-drive';
@@ -8,6 +8,7 @@ import { JWT } from 'google-auth-library';
 // @ts-ignore
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { PlayerData, Players } from '../../types/PlayerData';
+import chalk from 'chalk';
 
 export class RESAGuru extends SapphireClient {
   private players: Players = {};
@@ -38,32 +39,29 @@ export class RESAGuru extends SapphireClient {
 
     container.db = new Database();
     container.drive = new UtilsGDrive({
-      pathCredentials: path.join(
+      pathCredentials: join(
         process.cwd(),
         'credentials',
-        'credentials.json'
+        'drive-credentials.json'
       ),
-      pathToken: path.join(process.cwd(), 'credentials', 'token.json'),
+      pathToken: join(process.cwd(), 'credentials', 'drive-token.json'),
     });
+    if (container.drive)
+      this.logger.info(`${chalk.blue('[Drive API]:')} Connected to the drive!`);
+
     container.players = this.players;
   }
 
   public async initialize(): Promise<void> {
-    await this.loadSpreadsheet();
+    const auth = this.authenticateSheets();
+    await this.loadSpreadsheet(auth);
     await this.login();
 
     const uri = process.env.MONGO_URI;
     if (uri) container.db.connect(uri);
-    console.log(this.players);
   }
 
-  private async loadSpreadsheet(): Promise<void> {
-    const auth = new JWT({
-      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      keyFile: join(process.cwd(), 'credentials', 'sp-credentials.json'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-
+  private async loadSpreadsheet(auth: JWT): Promise<void> {
     const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, auth);
     await doc.loadInfo();
 
@@ -88,6 +86,22 @@ export class RESAGuru extends SapphireClient {
   private addPlayer(data: PlayerData): void {
     const key = data.type ? `${data.name}*${data.type}` : data.name;
     this.players[key] = data;
+  }
+
+  private authenticateSheets(): JWT {
+    const auth = new JWT({
+      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      keyFile: join(process.cwd(), 'credentials', 'sheet-credentials.json'),
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+
+    if (auth) {
+      container.logger.info(
+        `${chalk.green('[Sheets API]:')} Connected to the spreadsheet!`
+      );
+
+      return auth;
+    }
   }
 }
 

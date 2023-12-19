@@ -10,20 +10,15 @@ import {
   Colors,
   Interaction,
 } from 'discord.js';
-import {
-  addPlayerToClub,
-  getPlayerKey,
-  promotePlayer,
-  sellPlayer,
-} from '@lib/utils/players';
 import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { RGEmbed } from '@lib/structures/RGEmbed';
-import users from '../../models/users';
+import users from '@models/users';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import { getPlayerCard } from '@lib/utils/getPlayerCard';
+import { getPlayerKey } from '@lib/utils/players';
 
 @ApplyOptions<Command.Options>({
   name: 'claim',
@@ -105,7 +100,7 @@ export class ClaimCommand extends Command {
       components: [row],
     });
 
-    await addPlayerToClub(
+    await this.container.db.addPlayerToClub(
       interaction.user.id,
       getPlayerKey(player.name, player.type)
     );
@@ -172,7 +167,7 @@ export class ClaimCommand extends Command {
                 interaction.user.id,
                 ['club']
               );
-              const sell = await sellPlayer(
+              const sell = await this.container.db.sellPlayer(
                 collected.user.id,
                 player.name,
                 userData.club.lastIndexOf(player.name)
@@ -239,7 +234,10 @@ export class ClaimCommand extends Command {
             ],
           });
 
-        const promoted = await promotePlayer(i.user.id, player.name);
+        const promoted = await this.container.db.promotePlayer(
+          i.user.id,
+          player.name
+        );
         if (!promoted)
           return void i.followUp({
             embeds: [

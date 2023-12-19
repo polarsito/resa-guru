@@ -1,7 +1,7 @@
 import type { RESAGuru } from '@lib/structures/RESAGuru';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Events, Listener } from '@sapphire/framework';
-const chalk = require('chalk');
+import chalk from 'chalk';
 import { ActivityType } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({

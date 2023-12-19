@@ -10,7 +10,7 @@ export default class Database {
   public connect(uri: string): void {
     connect(uri).then(() =>
       container.client.logger.info(
-        `${chalk.green('[Database]:')} Connected to the database`
+        `${chalk.cyan('[Database]:')} Connected to the database`
       )
     );
   }
