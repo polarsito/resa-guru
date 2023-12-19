@@ -14,6 +14,7 @@ import { toLocaleString } from '@lib/utils/toLocaleString';
 import { RGEmbed } from '@lib/structures/RGEmbed';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
+import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
 
 @ApplyOptions<Command.Options>({
   name: 'multisell',
@@ -94,7 +95,7 @@ export class MultisellCommand extends Command {
       .filter((d) => typeof d === 'string');
     console.log(plrs);
     const values = plrs.map((p: string) =>
-      Math.round(this.container.players[p].value * 0.55)
+      getPlayerSellValue(this.container.players[p].value)
     );
     const total = values.reduce((a, b) => a + b);
 

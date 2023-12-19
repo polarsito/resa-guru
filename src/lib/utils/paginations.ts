@@ -4,6 +4,7 @@ import { getPlayerCard } from './getPlayerCard';
 import { PlayerPaginationOptions } from 'types/Pagination';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { toLocaleString } from './toLocaleString';
+import { getPlayerSellValue } from './getPlayerSellValue';
 
 export const playerPagination = (
   players: PlayerData[],
@@ -23,7 +24,7 @@ export const playerPagination = (
               .replaceAll('{playerPosition}', player.position)
               .replaceAll(
                 '{playerSellValue}',
-                toLocaleString(player.value * 0.55)
+                toLocaleString(getPlayerSellValue(player.value))
               )
           )
         )

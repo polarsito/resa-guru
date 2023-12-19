@@ -25,6 +25,7 @@ import {
   getPaginationButtonsRow,
   playerPagination,
 } from '@lib/utils/paginations';
+import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
 
 @ApplyOptions<Command.Options>({
   name: 'sell',
@@ -126,7 +127,7 @@ export class SellCommand extends Command {
 
         if (i.customId === 'confirm-sell') {
           const player = data.length === 1 ? data[0] : data[page - 1];
-          const sellPrice = Math.round(player.value * 0.55);
+          const sellPrice = getPlayerSellValue(player.value);
           const cardImage = await getPlayerCard(player);
 
           const userData = await this.container.db.getUserData(

@@ -19,6 +19,7 @@ import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import { getPlayerCard } from '@lib/utils/getPlayerCard';
 import { getPlayerKey } from '@lib/utils/players';
+import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
 
 @ApplyOptions<Command.Options>({
   name: 'claim',
@@ -69,8 +70,8 @@ export class ClaimCommand extends Command {
         )} - \`${toLocaleString(player.value)}\` / ${await resolveKey(
           interaction,
           LanguageKeys.Utils.SellsFor
-        )} - \`${toLocaleString(
-          Math.round(player.value * 0.55)
+        )} - \`${getPlayerSellValue(
+          player.value
         )}\`\n:coin: \`${await resolveKey(
           interaction,
           LanguageKeys.Utils.QuickSell
@@ -117,7 +118,7 @@ export class ClaimCommand extends Command {
     });
 
     collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
-      const sellPrice = Math.round(player.value * 0.55);
+      const sellPrice = getPlayerSellValue(player.value);
 
       if (i.customId === 'quick-sell') {
         const confirmationEmbed = new EmbedBuilder()

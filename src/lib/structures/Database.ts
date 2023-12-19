@@ -5,6 +5,7 @@ import users from '@models/users';
 import { UserData } from 'types/UserData';
 import { cooldowns } from '@models/cooldowns';
 import { CooldownData } from 'types/CooldownData';
+import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
 export default class Database {
   // Connect the database
   public connect(uri: string): void {
@@ -279,7 +280,7 @@ export default class Database {
     const playerValue = container.players[player].value;
     if (isNaN(playerValue!)) return false;
 
-    const moneyToAdd = Math.round(playerValue * 0.55);
+    const moneyToAdd = getPlayerSellValue(playerValue);
     await users.updateOne(
       {
         userId,

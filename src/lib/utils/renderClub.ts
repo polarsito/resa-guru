@@ -4,6 +4,7 @@ import { join } from 'path';
 import type { PlayerData } from 'types/PlayerData';
 import { abbreviateNumber } from './abbreviateNumber';
 import { container } from '@sapphire/framework';
+import { getPlayerSellValue } from './getPlayerSellValue';
 
 export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
   let canvas = createCanvas(774, 645);
@@ -63,7 +64,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
       ctx.fillText(data.position, 377, y);
       ctx.fillText(data.rating.toString(), 465, y);
       ctx.fillText(abbreviateNumber(data.value), 541, y);
-      ctx.fillText(abbreviateNumber(Math.round(data.value * 0.55)), 603, y);
+      ctx.fillText(abbreviateNumber(getPlayerSellValue(data.value)), 603, y);
       ctx.fillText(data.type, 662, y);
 
       y += 14;
@@ -79,7 +80,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
       ctx.fillText(data.position, 377, y);
       ctx.fillText(data.rating.toString(), 465, y);
       ctx.fillText(abbreviateNumber(data.value), 541, y);
-      ctx.fillText(abbreviateNumber(Math.round(data.value * 0.55)), 603, y);
+      ctx.fillText(abbreviateNumber(getPlayerSellValue(data.value)), 603, y);
       ctx.fillText(data.type, 662, y);
 
       y += 14;
