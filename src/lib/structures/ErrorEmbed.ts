@@ -5,7 +5,8 @@ export class ErrorEmbed extends EmbedBuilder {
   constructor(error: string) {
     super({
       color: Colors.Red,
-      description: `❌ | ${error}`,
+      description: error,
+      title: 'An error has occurred',
     });
   }
 }

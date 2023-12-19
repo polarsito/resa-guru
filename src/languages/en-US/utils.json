@@ -23,5 +23,6 @@
     "FLIP_LOST": "Unlucky! It was `{result}`, you lost `{value}` credits",
     "SELLS_FOR": "Sells for",
     "QUICK_SELL": "Quick sell",
-    "POSITION": "Position"
+    "POSITION": "Position",
+    "SLOWDOWN": "Hey, slow down"
 }

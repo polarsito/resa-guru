@@ -21,3 +21,9 @@ main();
 process.on('unhandledRejection', (error) => {
   container.logger.error(error);
 });
+
+declare module '@sapphire/framework' {
+  interface Preconditions {
+    DeveloperOnly: never;
+  }
+}

@@ -23,3 +23,4 @@ export const FlipLost = 'utils:FLIP_LOST';
 export const SellsFor = 'utils:SELLS_FOR';
 export const QuickSell = 'utils:QUICK_SELL';
 export const Position = 'utils:POSITION';
+export const SlowDown = 'utils:SLOWDOWN';

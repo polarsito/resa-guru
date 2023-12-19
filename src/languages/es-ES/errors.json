@@ -12,5 +12,6 @@
     "NO_PLAYERS_IN_POSITIONS": "No hay ningún jugador en ambas posiciones",
     "SAME_POSITIONS": "Las posiciones son iguales",
     "NOT_ENOUGH_CREDITS_TO_BUY": "No tienes suficientes créditos para comprar a {player}\nNecesitas **{value}** créditos más",
-    "COOLDOWN": "Ya has ejecutado este comando, podrás ejecutarlo nuevamente <t:{date}:R>"
+    "COOLDOWN": "Ya has ejecutado este comando, podrás ejecutarlo nuevamente <t:{date}:R>",
+    "DEVELOPER_ONLY": "Este comando solo puede ser ejecutado por un desarrollador"
 }

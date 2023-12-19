@@ -17,6 +17,7 @@
       "@commands/*": ["commands/*"],
       "@listeners/*": ["listeners/*"],
       "@assets/*": ["assets/*"],
+      "@src/*": ["./*"],
       "types/*": ["types/*"]
     }
   },

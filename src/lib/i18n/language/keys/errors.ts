@@ -12,3 +12,4 @@ export const NoPlayersInPositions = 'errors:NO_PLAYERS_IN_POSITIONS';
 export const SamePositions = 'errors:SAME_POSITIONS';
 export const NotEnoughCreditsToBuy = 'errors:NOT_ENOUGH_CREDITS_TO_BUY';
 export const Cooldown = 'errors:COOLDOWN';
+export const DeveloperOnly = 'errors:DEVELOPER_ONLY';

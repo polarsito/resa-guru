@@ -1,9 +1,8 @@
-import { EmbedBuilder } from '@discordjs/builders';
+import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
+import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ChatInputCommandDeniedPayload, Events } from '@sapphire/framework';
 import { Listener, UserError } from '@sapphire/framework';
-import { Colors } from 'discord.js';
-import { getRealTime } from '@lib/utils/getRealTime';
 
 @ApplyOptions<Listener.Options>({
   event: Events.ChatInputCommandDenied,
@@ -11,26 +10,31 @@ import { getRealTime } from '@lib/utils/getRealTime';
 })
 export class ChatInputCommandDenied extends Listener {
   public async run(
-    { context, message: _content, identifier }: UserError,
+    error: UserError,
     { interaction }: ChatInputCommandDeniedPayload
-  ): Promise<void> {
-    if (Reflect.get(Object(context), 'silent')) return;
+  ) {
+    if (Reflect.get(Object(error.context), 'silent')) return;
 
-    if (identifier! === 'preconditionCooldown') {
-      // @ts-ignore
-      const remaining = getRealTime(context.remaining);
+    switch (error.identifier!) {
+      case 'preconditionCooldown':
+        const embed = await new CooldownEmbed(
+          interaction,
+          // @ts-ignore
+          error.context.remaining
+        ).get();
 
-      return void interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(Colors.White)
-            .setDescription(
-              `There is a cooldown in effect for this chat input command. It'll be available in ${remaining}`
-            ),
-        ],
-        ephemeral: true,
-        allowedMentions: { repliedUser: false },
-      });
+        interaction.reply({
+          embeds: [embed],
+          ephemeral: true,
+        });
+        break;
+
+      case 'DeveloperOnly':
+        interaction.reply({
+          embeds: [new ErrorEmbed(error.message)],
+          ephemeral: true,
+        });
+        break;
     }
   }
 }

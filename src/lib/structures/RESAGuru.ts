@@ -27,9 +27,9 @@ export class RESAGuru extends SapphireClient {
       },
       i18n: {
         fetchLanguage: async (context: InternationalizationContext) => {
-          const userData = await users
-            .findOne({ userId: context.user?.id })
-            .lean();
+          const userData = await container.db.getUserData(context.user!.id, [
+            'language',
+          ]);
 
           if (!userData?.language) return 'en-US';
           return userData.language;

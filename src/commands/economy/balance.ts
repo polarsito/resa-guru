@@ -5,6 +5,7 @@ import { RGEmbed } from '@lib/structures/RGEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { LanguageKeys } from '@lib/i18n/language';
 import { resolveKey } from '@sapphire/plugin-i18next';
+
 @ApplyOptions<Command.Options>({
   name: 'balance',
   description: 'Show your credit balance',

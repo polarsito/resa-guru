@@ -24,5 +24,6 @@
     "FLIP_LOST": "Mala suerte! El resultado fue `{result}`, perdiste `{value}` créditos",
     "SELLS_FOR": "Se vende por",
     "QUICK_SELL": "Venta rápida",
-    "POSITION": "Posición"
+    "POSITION": "Posición",
+    "SLOWDOWN": "Oye, más despacio"
 }
