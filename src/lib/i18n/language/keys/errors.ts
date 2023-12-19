@@ -1,0 +1,14 @@
+export const PlayerNotExist = 'errors:PLAYER_NOT_EXIST';
+export const PlayerAlreadyStarter = 'errors:PLAYER_ALREADY_STARTER';
+export const PlayerNotOnClub = 'errors:PLAYER_NOT_ON_CLUB';
+export const XIFull = 'errors:11_FULL';
+export const ErrorOcurred = 'errors:ERROR';
+export const PlayerNotStarter = 'errors:PLAYER_NOT_STARTER';
+export const XIEmpty = 'errors:11_EMPTY';
+export const ClubEmptyOrNoId = 'errors:CLUB_EMPTY_OR_NOT_ID';
+export const EndingIdNotHigher = 'errors:ENDING_ID_NOT_HIGHER';
+export const NeedStarter = 'errors:NEED_STARTER';
+export const NoPlayersInPositions = 'errors:NO_PLAYERS_IN_POSITIONS';
+export const SamePositions = 'errors:SAME_POSITIONS';
+export const NotEnoughCreditsToBuy = 'errors:NOT_ENOUGH_CREDITS_TO_BUY';
+export const Cooldown = 'errors:COOLDOWN';

@@ -1,0 +1,12 @@
+{
+    "GURU_INFORMATION": "Información de RESA Guru",
+    "USE_HELP": "Utiliza `/help` para ver los comandos del bot",
+    "BOT_INFO": "Información del bot",
+    "BOT_INFO_VALUE": "> Tiempo de actividad: {uptime}\n> Latencia del Bot/API: ${latency}ms",
+    "BOT_PROCESS_INFO": "Información del proceso del bot",
+    "BOT_PROCESS_INFO_VALUE": "> Uso de RAM: {ramUsage}MB\n> Uso de CPU: {cpuUsage}%\n> Entorno: NodeJS (18.14.2)",
+    "EXTRA_INFO": "Información extra",
+    "EXTRA_INFO_VALUE": "> Servidor de soporte: [Click Here]({guildLink})\n> Dueños: sashie#8383 & punz#8964",
+    "GURU_HELP": "Ayuda de RESA Guru",
+    "USE_INFO": "Puedes usar `/info` para ver información del bot"
+}

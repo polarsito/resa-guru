@@ -1,0 +1,19 @@
+{
+    "BALANCE": "Muestra tu presupuesto de transferencia",
+    "CLAIM": "Reclama un jugador nuevo cada una hora",
+    "DAILY": "Reclama una recompensa diaria",
+    "BUY": "Compra un jugador para que se una a tu club",
+    "SELL": "Vende a un jugador de tu club",
+    "MULTISELL": "Vende varios jugadores de tu club simultáneamente",
+    "CLUB": "Lista de jugadores de nuestro club",
+    "11_SHOW": "Muestra tu 11 inicial",
+    "11_ADD": "Añade a un jugador a tu 11 inicial",
+    "11_REMOVE": "Remueve un jugador de tu 11 inicial",
+    "COOLDOWNS": "Lista todos los estados de tus cooldowns",
+    "FAQS": "Preguntas frecuentes sobre el bot",
+    "FLIP": "Gira una moneda y apuesta créditos",
+    "INFO": "Información sobre el bot",
+    "SHOW": "Muestra un jugador de tu club de la temporada actual",
+    "SWAP": "Mueve jugadores alrededor de tu equipo",
+    "LEADERBOARD_BALANCE": "Muestra la clasifición de saldos más altos"
+}

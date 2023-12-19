@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "types": ["node", "google-spreadsheet"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "rootDir": "src",
+    "noImplicitAny": false,
+    "ignoreDeprecations": "5.0",
+    "baseUrl": "./src",
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@models/*": ["models/*"],
+      "@lib/*": ["lib/*"],
+      "@commands/*": ["commands/*"],
+      "@listeners/*": ["listeners/*"],
+      "@assets/*": ["assets/*"],
+      "@types/*": ["types/*"]
+    }
+  },
+  "include": ["./src"],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+}

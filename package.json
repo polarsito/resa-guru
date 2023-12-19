@@ -1,0 +1,37 @@
+{
+  "name": "resa-guru",
+  "version": "1.0.0",
+  "description": "RESA Guru Bot",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "node build/index.js",
+    "build": "tsc && tsc-alias",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts"
+  },
+  "author": "punz#8964 - sashie#8383",
+  "license": "ISC",
+  "dependencies": {
+    "@googleapis/drive": "8.4.0",
+    "@sapphire/decorators": "6.0.3",
+    "@sapphire/framework": "5.0.4",
+    "@sapphire/plugin-i18next": "7.0.1",
+    "canvas": "2.11.2",
+    "chalk": "4.1.2",
+    "discord.js": "14.14.1",
+    "dotenv": "16.3.1",
+    "google-auth-library": "8.9.0",
+    "google-spreadsheet": "4.1.1",
+    "mongoose": "8.0.3",
+    "path": "0.12.7",
+    "quick-ms": "1.2.5",
+    "utils-google-drive": "5.0.3"
+  },
+  "devDependencies": {
+    "@sapphire/ts-config": "5.0.0",
+    "@types/google-spreadsheet": "^4.0.0",
+    "tsc-alias": "1.8.8",
+    "tsconfig-paths": "4.2.0",
+    "typescript": "5.3.3"
+  }
+}

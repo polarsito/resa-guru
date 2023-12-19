@@ -1,0 +1,12 @@
+{
+    "GURU_INFORMATION": "RESA Guru Information",
+    "USE_HELP": "Use `/help` to see the bot commands",
+    "BOT_INFO": "Bot information",
+    "BOT_INFO_VALUE": "> Uptime: {uptime}\n> Bot/API Latency: ${latency}ms",
+    "BOT_PROCESS_INFO": "Bot process information",
+    "BOT_PROCESS_INFO_VALUE": "> RAM Usage: {ramUsage}MB\n> CPU Usage: {cpuUsage}%\n> Environment: NodeJS (18.14.2)",
+    "EXTRA_INFO": "Extra information",
+    "EXTRA_INFO_VALUE": "> Support server: [Click Here]({guildLink})\n> Owners: sashie#8383 & punz#8964",
+    "GURU_HELP": "RESA Guru Help",
+    "USE_INFO": "You can use `/info` to see more bot information"
+}

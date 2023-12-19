@@ -1,0 +1,20 @@
+{
+    "BALANCE": "Shows your credit balance",
+    "CLAIM": "Claim a new player every hour",
+    "DAILY": "Claim a daily credit reward",
+    "BUY": "Buy a player to join your club",
+    "SELL": "Sell a player from your club",
+    "MULTISELL": "Sell multiple players from your club simultaneously",
+    "CLUB": "List players from our club",
+    "11_SHOW": "Shows your current active team",
+    "11_ADD": "Add a player to your starting 11",
+    "11_REMOVE": "Remove a player from your starting 11",
+    "COOLDOWNS": "Lists the status of all your cooldowns",
+    "FAQS": "Frequently asked bot questions",
+    "FLIP": "Flip a coin and bet credits",
+    "INFO": "Information about the bot",
+    "SHOW": "Show a player from your club from the current season",
+    "SWAP": "Move players around in your team",
+    "LEADERBOARD_BALANCE": "Shows balance leaderboard",
+    "LANGUAGE": "Choose your desired language"
+}

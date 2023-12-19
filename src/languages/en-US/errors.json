@@ -1,0 +1,16 @@
+{
+    "PLAYER_NOT_EXIST": "That player does not exist",
+    "PLAYER_ALREADY_STARTER": "That player is already a starter",
+    "PLAYER_NOT_ON_CLUB": "You don't have that player in your club",
+    "11_FULL": "Your 11 is full",
+    "ERROR": "An error has ocurred",
+    "PLAYER_NOT_STARTER": "That player is not in your 11",
+    "11_EMPTY": "Your 11 is empty",
+    "CLUB_EMPTY_OR_NOT_ID": "Your club is empty or a player with the initial id was not found",
+    "ENDING_ID_NOT_HIGHER": "The ending id must be higher than the starting id",
+    "NEED_STARTER": "You need atleast one starter",
+    "NO_PLAYERS_IN_POSITIONS": "There are no players in both positions",
+    "SAME_POSITIONS": "The positions are the same",
+    "NOT_ENOUGH_CREDITS_TO_BUY": "You don't have enough credits to buy {player}\nYou need **{value}** credits more",
+    "COOLDOWN": "You have already executed this command, you will be able to execute it again <t:{date}:R>"
+}

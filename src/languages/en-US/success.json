@@ -1,0 +1,13 @@
+{
+    "PLAYER_PROMOTED": "**{player}** was successfully added to your team",
+    "PLAYER_UNPROMOTED": "**{player}** was successfully removed from your team",
+    "JOINED_CLUB_FOR_CREDITS": "**{player}** has joined your club for `{value}` credits",
+    "CLUB_NAME": "Your club name has been changed to `{name}`",
+    "DAILY_REWARD": "You have claimed your daily reward of **2500** credits",
+    "SUCCESS_MULTISELL": "`{amount}` players successfully sold for `{value}`\n\nYour new balance is: `{balance}`",
+    "PLAYER_SOLD_FOR_CREDITS": "**{player}** has been sold for `{value}` credits",
+    "PLAYERS_SWAP": "Player positions successfully switched",
+    "LANGUAGE_SET": "Your language has been changed to `{language}`",
+    "SUCCESSFULLY_PROMOTED": "Successfully promoted",
+    "PLAYER_QUICK_PROMOTED": "`{player}` was successfully promoted"
+}

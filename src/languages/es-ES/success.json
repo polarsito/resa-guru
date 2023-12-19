@@ -1,0 +1,13 @@
+{
+    "PLAYER_PROMOTED": "**{player}** ha sido añadido a tu 11 con éxito",
+    "PLAYER_UNPROMOTED": "**{player}** ha sido removido de tu 11 con éxito",
+    "JOINED_CLUB_FOR_CREDITS": "**{player}** se ha unido a tu club por `{value}` créditos",
+    "CLUB_NAME": "El nombre de tu club ha sido cambiado a `{name}`",
+    "DAILY_REWARD": "Reclamaste tu recompensa diaria de **2500** créditos",
+    "SUCCESS_MULTISELL": "`{amount}` jugadores han sido vendidos por `{value}`\n\nTu nuevo saldo es: `{balance}`",
+    "PLAYER_SOLD_FOR_CREDITS": "**{player}** ha sido vendido por `{value}` créditos",
+    "PLAYERS_SWAP": "Las posiciones de los jugadores han sido cambiadas con éxito",
+    "LANGUAGE_SET": "Tu idioma ha sido cambiado a `{language}`",
+    "SUCCESSFULLY_PROMOTED": "Ascendido con éxito",
+    "PLAYER_QUICK_PROMOTED": "`{player}` ha sido ascendido con éxito"
+}

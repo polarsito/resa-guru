@@ -1,0 +1,11 @@
+export const PlayerPromoted = 'success:PLAYER_PROMOTED';
+export const PlayerUnPromoted = 'success:PLAYER_UNPROMOTED';
+export const JoinedClubForCredits = 'success:JOINED_CLUB_FOR_CREDITS';
+export const ClubName = 'success:CLUB_NAME';
+export const DailyReward = 'success:DAILY_REWARD';
+export const SuccessMultisell = 'success:SUCCESS_MULTISELL';
+export const PlayerSoldForCredits = 'success:PLAYER_SOLD_FOR_CREDITS';
+export const PlayersSwap = 'success:PLAYERS_SWAP';
+export const LanguageSet = 'success:LANGUAGE_SET';
+export const SuccessfullyPromoted = 'success:SUCCESSFULLY_PROMOTED';
+export const PlayerQuickPromoted = 'success:PLAYER_QUICK_PROMOTED';
