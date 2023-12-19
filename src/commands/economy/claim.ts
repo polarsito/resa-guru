@@ -1,7 +1,6 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { getClaimedPlayer } from '@lib/utils/getClaimedPlayer';
-import { EmbedBuilder } from '@discordjs/builders';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -14,7 +13,6 @@ import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { RGEmbed } from '@lib/structures/RGEmbed';
-import users from '@models/users';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import { getPlayerCard } from '@lib/utils/getPlayerCard';
@@ -121,7 +119,7 @@ export class ClaimCommand extends Command {
       const sellPrice = getPlayerSellValue(player.value);
 
       if (i.customId === 'quick-sell') {
-        const confirmationEmbed = new EmbedBuilder()
+        const confirmationEmbed = new RGEmbed()
           .setColor(Colors.Green)
           .setDescription(
             `${await resolveKey(

@@ -1,7 +1,6 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
-import { Colors } from 'discord.js';
 import { RGEmbed } from '@lib/structures/RGEmbed';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
@@ -42,7 +41,6 @@ export class DailyCommand extends Command {
 
     await this.container.db.addMoney(interaction.user.id, 2500);
     const embed = new RGEmbed(interaction.user)
-      .setColor(Colors.White)
       .setDescription(
         await resolveKey(interaction, LanguageKeys.Success.DailyReward)
       )

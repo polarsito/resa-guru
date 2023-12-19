@@ -8,13 +8,11 @@ import {
   playerExists,
 } from '@lib/utils/players';
 import type { PlayerData } from 'types/PlayerData';
-import { EmbedBuilder } from '@discordjs/builders';
 import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  Colors,
   Interaction,
 } from 'discord.js';
 import { toLocaleString } from '@lib/utils/toLocaleString';
@@ -26,6 +24,7 @@ import {
   playerPagination,
 } from '@lib/utils/paginations';
 import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
+import { RGEmbed } from '@lib/structures/RGEmbed';
 
 @ApplyOptions<Command.Options>({
   name: 'sell',
@@ -142,7 +141,7 @@ export class SellCommand extends Command {
           );
           return void interaction.editReply({
             embeds: [
-              new EmbedBuilder()
+              new RGEmbed()
                 .setTitle(
                   await resolveKey(interaction, LanguageKeys.Utils.PlayerSold)
                 )
@@ -157,7 +156,6 @@ export class SellCommand extends Command {
                     .replace('{value}', toLocaleString(sellPrice))}`
                 )
                 .setImage(cardImage)
-                .setColor(Colors.White)
                 .setFooter({
                   text: interaction.user.username,
                   iconURL: interaction.user.displayAvatarURL(),

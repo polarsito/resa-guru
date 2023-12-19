@@ -1,7 +1,6 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { EmbedBuilder } from '@discordjs/builders';
-import { Colors } from 'discord.js';
+import { RGEmbed } from '@lib/structures/RGEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
@@ -71,26 +70,22 @@ export class FlipCommand extends Command {
     const result = arr[Math.floor(Math.random() * arr.length)];
     const win = result === subCommand;
 
-    let embed: EmbedBuilder;
+    let embed: RGEmbed;
 
     if (win) {
-      embed = new EmbedBuilder()
-        .setColor(Colors.Green)
-        .setDescription(
-          (await resolveKey(interaction, LanguageKeys.Utils.FlipWin))
-            .replace('{result}', subCommand)
-            .replace('{value}', toLocaleString(amount))
-        );
+      embed = new RGEmbed().setDescription(
+        (await resolveKey(interaction, LanguageKeys.Utils.FlipWin))
+          .replace('{result}', subCommand)
+          .replace('{value}', toLocaleString(amount))
+      );
 
       await this.container.db.addMoney(interaction.user.id, amount);
     } else {
-      embed = new EmbedBuilder()
-        .setColor(Colors.Red)
-        .setDescription(
-          (await resolveKey(interaction, LanguageKeys.Utils.FlipLost))
-            .replace('{result}', subCommand === 'tails' ? 'heads' : 'tails')
-            .replace('{value}', toLocaleString(amount))
-        );
+      embed = new RGEmbed().setDescription(
+        (await resolveKey(interaction, LanguageKeys.Utils.FlipLost))
+          .replace('{result}', subCommand === 'tails' ? 'heads' : 'tails')
+          .replace('{value}', toLocaleString(amount))
+      );
 
       await this.container.db.addMoney(interaction.user.id, -amount);
     }

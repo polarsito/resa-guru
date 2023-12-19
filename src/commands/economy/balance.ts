@@ -1,6 +1,5 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Colors } from 'discord.js';
 import { RGEmbed } from '@lib/structures/RGEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { LanguageKeys } from '@lib/i18n/language';

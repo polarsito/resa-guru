@@ -8,10 +8,7 @@ import {
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  Colors,
-  EmbedBuilder,
   Interaction,
-  Message,
 } from 'discord.js';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { RGEmbed } from '@lib/structures/RGEmbed';

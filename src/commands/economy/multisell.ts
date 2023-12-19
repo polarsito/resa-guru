@@ -6,8 +6,6 @@ import {
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,
-  Colors,
-  EmbedBuilder,
   Interaction,
 } from 'discord.js';
 import { toLocaleString } from '@lib/utils/toLocaleString';
@@ -147,11 +145,9 @@ export class MultisellCommand extends Command {
       if (i.customId === 'deny-multisell') {
         i.followUp({
           embeds: [
-            new EmbedBuilder()
-              .setColor(Colors.White)
-              .setDescription(
-                await resolveKey(interaction, LanguageKeys.Utils.SaleCancelled)
-              ),
+            new RGEmbed().setDescription(
+              await resolveKey(interaction, LanguageKeys.Utils.SaleCancelled)
+            ),
           ],
         });
 
@@ -178,19 +174,17 @@ export class MultisellCommand extends Command {
 
         i.followUp({
           embeds: [
-            new EmbedBuilder()
-              .setColor(Colors.White)
-              .setDescription(
-                (
-                  await resolveKey(
-                    interaction,
-                    LanguageKeys.Success.SuccessMultisell
-                  )
+            new RGEmbed().setDescription(
+              (
+                await resolveKey(
+                  interaction,
+                  LanguageKeys.Success.SuccessMultisell
                 )
-                  .replace('{amount}', plrs.length.toString())
-                  .replace('{value}', toLocaleString(total))
-                  .replace('{balance}', toLocaleString(newData.money))
-              ),
+              )
+                .replace('{amount}', plrs.length.toString())
+                .replace('{value}', toLocaleString(total))
+                .replace('{balance}', toLocaleString(newData.money))
+            ),
           ],
         });
       }

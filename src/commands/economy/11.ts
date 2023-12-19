@@ -7,19 +7,8 @@ import { renderXI } from '@lib/utils/renderXI';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import type { PlayerData } from 'types/PlayerData';
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  EmbedBuilder,
-} from '@discordjs/builders';
-import {
-  ButtonInteraction,
-  ButtonStyle,
-  Colors,
-  Interaction,
-} from 'discord.js';
-import { getPlayerCard } from '@lib/utils/getPlayerCard';
-import { toLocaleString } from '@lib/utils/toLocaleString';
+import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
+import { ButtonInteraction, ButtonStyle, Interaction } from 'discord.js';
 import {
   getPaginationButtonsRow,
   playerPagination,

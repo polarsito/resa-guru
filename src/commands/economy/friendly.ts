@@ -1,10 +1,9 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { EmbedBuilder } from '@discordjs/builders';
-import { Colors } from 'discord.js';
 import { match } from '@lib/utils/match';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
+import { RGEmbed } from '@lib/structures/RGEmbed';
 
 @ApplyOptions<Command.Options>({
   name: 'friendly',
@@ -79,8 +78,7 @@ export class FriendlyCommand extends Command {
         embeds: [new ErrorEmbed('Your opponent needs 11 players to play')],
       });
 
-    const embed = new EmbedBuilder()
-      .setColor(Colors.White)
+    const embed = new RGEmbed()
       .setDescription(
         `\`🟢\` **${
           homeData?.clubName! ?? `${interaction.user.username} FC`
