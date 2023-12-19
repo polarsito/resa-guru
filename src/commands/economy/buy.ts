@@ -1,12 +1,7 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
-import {
-  buyPlayer,
-  getPlayerData,
-  getPlayerKey,
-  playerExists,
-} from '@lib/utils/players';
+import { getPlayerData, getPlayerKey, playerExists } from '@lib/utils/players';
 import type { PlayerData } from '../../types/PlayerData';
 import {
   ActionRowBuilder,
@@ -207,7 +202,7 @@ export class BuyCommand extends Command {
             components: [],
           });
 
-        await buyPlayer(
+        await this.container.db.buyPlayer(
           interaction.user.id,
           getPlayerKey(player.name, player.type)
         );

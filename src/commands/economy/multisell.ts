@@ -1,8 +1,6 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import players from '@lib/assets/players.json';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
-import specialPlayers from '@lib/assets/special_players.json';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -14,7 +12,6 @@ import {
 } from 'discord.js';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { RGEmbed } from '@lib/structures/RGEmbed';
-import { multisellPlayers } from '@lib/utils/players';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 
@@ -97,10 +94,7 @@ export class MultisellCommand extends Command {
       .filter((d) => typeof d === 'string');
     console.log(plrs);
     const values = plrs.map((p: string) =>
-      Math.round(
-        (p.includes('*') ? specialPlayers[p]?.value! : players[p]?.value!) *
-          0.55
-      )
+      Math.round(this.container.players[p].value * 0.55)
     );
     const total = values.reduce((a, b) => a + b);
 
@@ -111,16 +105,10 @@ export class MultisellCommand extends Command {
       )}\n\n${plrs
         .map(
           (p) =>
-            `\`${
-              p.includes('*')
-                ? `${specialPlayers[p].name} | ${
-                    specialPlayers[p].rating
-                  } | ${toLocaleString(values[plrs.indexOf(p)])} | ${
-                    specialPlayers[p].type
-                  }`
-                : `${players[p].name} | ${players[p].rating} | ${toLocaleString(
-                    values[plrs.indexOf(p)]
-                  )} | ${players[p].type}`
+            `\`${this.container.players[p].name} | ${
+              this.container.players[p].rating
+            } | ${toLocaleString(values[plrs.indexOf(p)])} | ${
+              this.container.players[p].type
             }\` ⚠️`
         )
         .join('\n')}\n\n${await resolveKey(
@@ -171,7 +159,7 @@ export class MultisellCommand extends Command {
         });
         collector.stop();
       } else if (i.customId === 'confirm-multisell') {
-        await multisellPlayers(
+        await this.container.db.multisellPlayers(
           interaction.user.id,
           startingId,
           endingId!,

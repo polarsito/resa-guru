@@ -1,6 +1,4 @@
 import type { PlayerData } from '../../types/PlayerData';
-import players from '@lib/assets/players.json';
-import specialPlayers from '@lib/assets/special_players.json';
 import { container } from '@sapphire/framework';
 
 export async function hasPlayer(
@@ -13,7 +11,8 @@ export async function hasPlayer(
 }
 
 export function playerExists(name: string): boolean {
-  const allPlayers = [...Object.keys(players), ...Object.keys(specialPlayers)];
+  const players = Object.keys(container.players);
+  const allPlayers = players;
   return allPlayers.some(
     (p) =>
       p.toLowerCase() === name.toLowerCase() ||
@@ -22,15 +21,13 @@ export function playerExists(name: string): boolean {
 }
 
 export function getPlayerData(name: string): PlayerData[] {
-  const allPlayers = [...Object.keys(players), ...Object.keys(specialPlayers)];
+  const players = container.players;
+  const allPlayers = Object.keys(players);
   const entries = allPlayers.filter((p) =>
     p.toLowerCase().includes(name.toLowerCase())
   );
 
-  const data: PlayerData[] = entries.map((ent) =>
-    ent.includes('*') ? specialPlayers[ent] : players[ent]
-  );
-
+  const data: PlayerData[] = entries.map((ent) => players[ent]);
   return data;
 }
 

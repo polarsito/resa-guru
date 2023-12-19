@@ -2,11 +2,8 @@ import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { renderClub } from '@lib/utils/renderClub';
-import players from '@lib/assets/players.json';
-import specialPlayers from '@lib/assets/special_players.json';
 import {
   ActionRowBuilder,
-  AttachmentBuilder,
   ButtonBuilder,
   ButtonInteraction,
   ButtonStyle,

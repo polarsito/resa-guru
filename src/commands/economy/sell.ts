@@ -6,7 +6,6 @@ import {
   getPlayerKey,
   hasPlayer,
   playerExists,
-  sellPlayer,
 } from '@lib/utils/players';
 import type { PlayerData } from '../../types/PlayerData';
 import { EmbedBuilder } from '@discordjs/builders';
@@ -190,7 +189,7 @@ export class SellCommand extends Command {
           ['club']
         );
         const key = getPlayerKey(player.name, player.type);
-        await sellPlayer(
+        await this.container.db.sellPlayer(
           interaction.user.id,
           key,
           userData.club.lastIndexOf(key)

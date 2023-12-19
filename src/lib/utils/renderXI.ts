@@ -2,12 +2,11 @@ import { createCanvas, loadImage } from 'canvas';
 import { AttachmentBuilder } from 'discord.js';
 import { join } from 'path';
 import type { PlayerData } from '../../types/PlayerData';
-import players from '@lib/assets/players.json';
-import specialPlayers from '@lib/assets/special_players.json';
 import { getPlayerCard } from './getPlayerCard';
 import { getPlayerKey } from './players';
 import { toLocaleString } from './toLocaleString';
 import { getTeamChemistry } from './chemistry';
+import { container } from '@sapphire/framework';
 
 export async function renderXI(
   userId: string,
@@ -16,6 +15,7 @@ export async function renderXI(
 ): Promise<AttachmentBuilder> {
   const canvas = createCanvas(869, 806);
   const ctx = canvas.getContext('2d');
+  const players = container.players;
 
   const background = await loadImage(
     join(process.cwd(), 'images', 'xi-background.png')
@@ -36,15 +36,11 @@ export async function renderXI(
 
   // @ts-ignore
   const ovrValue = toLocaleString(
-    values
-      .map((k) => (k.includes('*') ? specialPlayers[k] : players[k])?.value!)
-      .reduce((a, b) => a + b)
+    values.map((k) => players[k].value!).reduce((a, b) => a + b)
   );
 
   const ovrRating = toLocaleString(
-    values
-      .map((k) => (k.includes('*') ? specialPlayers[k] : players[k])?.rating!)
-      .reduce((a, b) => a + b)
+    values.map((k) => players[k].rating!).reduce((a, b) => a + b)
   );
 
   ctx.textAlign = 'center';
@@ -60,10 +56,7 @@ export async function renderXI(
 
   const startersData: object = {};
   keys.forEach((key) => {
-    if (starters[key])
-      startersData[key] = starters[key].includes('*')
-        ? specialPlayers[starters[key]]
-        : players[starters[key]];
+    if (starters[key]) startersData[key] = players[starters[key]];
   });
 
   const startersKeys = Object.keys(startersData);
@@ -488,13 +481,13 @@ function checkChemistry(plr1: PlayerData, plr2: PlayerData): number {
     else if (plr1.nation === plr2.nation) plrPoints += 3;
     else plrPoints++;
   } else if (plr1.type === 'HR' || plr2.type === 'HR') {
-    if (plr1.nation === plr2.nation && plr1.league !== plr2.league) plrPoints++;
-    else if (plr1.nation === plr2.nation && plr1.league === plr2.league)
+    if (plr1.nation === plr2.nation && plr1.tier !== plr2.tier) plrPoints++;
+    else if (plr1.nation === plr2.nation && plr1.tier === plr2.tier)
       plrPoints += 3;
-    else if (plr1.league === plr2.league && plr1.nation !== plr2.nation)
+    else if (plr1.tier === plr2.tier && plr1.nation !== plr2.nation)
       plrPoints += 3;
   } else {
-    if (plr1.league === plr2.league) plrPoints++;
+    if (plr1.tier === plr2.tier) plrPoints++;
     if (plr1.nation === plr2.nation) plrPoints++;
     if (plr1.club === plr2.club) plrPoints++;
   }

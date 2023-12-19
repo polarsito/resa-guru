@@ -1,7 +1,6 @@
+import { container } from '@sapphire/framework';
 import type { MatchResult } from '../../types/MatchResult';
 import type { UserData } from '../../types/UserData';
-import players from '@lib/assets/players.json';
-import specialPlayers from '@lib/assets/special_players.json';
 import { getTeamChemistry } from './chemistry';
 
 export async function match(
@@ -11,12 +10,10 @@ export async function match(
   const data1 = player1.starters;
   const data2 = player2.starters;
 
-  const ratingt1 = Object.values(data1).map(
-    (p) => (p.includes('*') ? specialPlayers[p] : players[p]).rating
-  );
-  const ratingt2 = Object.values(data2).map(
-    (p) => (p.includes('*') ? specialPlayers[p] : players[p]).rating
-  );
+  const players = container.players;
+
+  const ratingt1 = Object.values(data1).map((p) => players[p].rating);
+  const ratingt2 = Object.values(data2).map((p) => players[p].rating);
 
   const rating1 = ratingt1.reduce((a, b) => a + b);
   const rating2 = ratingt2.reduce((a, b) => a + b);

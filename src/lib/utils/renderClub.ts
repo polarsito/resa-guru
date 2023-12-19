@@ -2,13 +2,13 @@ import { createCanvas, loadImage } from 'canvas';
 import { AttachmentBuilder } from 'discord.js';
 import { join } from 'path';
 import type { PlayerData } from '../../types/PlayerData';
-import players from '@lib/assets/players.json';
-import specialPlayers from '@lib/assets/special_players.json';
 import { abbreviateNumber } from './abbreviateNumber';
+import { container } from '@sapphire/framework';
 
 export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
   let canvas = createCanvas(774, 645);
   let ctx = canvas.getContext('2d');
+  const players = container.players;
 
   let background = await loadImage(
     join(process.cwd(), 'images', 'club-background.png')
@@ -33,9 +33,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
   let addedPageMessage = false;
   for (let i = 1; i <= plrs.length; i++) {
     ctx.textAlign = 'start';
-    const data: PlayerData = plrs[i - 1].includes('*')
-      ? specialPlayers[plrs[i - 1]]
-      : players[plrs[i - 1]];
+    const data: PlayerData = players[i - 1];
     const actualPage = Math.floor(i / 10) + 1;
 
     if (!addedPageMessage) {
@@ -61,7 +59,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
       ctx.textAlign = 'center';
 
       ctx.fillText(i.toString(), 100, y);
-      ctx.fillText(data.league, 287, y);
+      ctx.fillText(data.tier, 287, y);
       ctx.fillText(data.position, 377, y);
       ctx.fillText(data.rating.toString(), 465, y);
       ctx.fillText(abbreviateNumber(data.value), 541, y);
@@ -77,7 +75,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
       ctx.textAlign = 'center';
 
       ctx.fillText(i.toString(), 100, y);
-      ctx.fillText(data.league, 287, y);
+      ctx.fillText(data.tier, 287, y);
       ctx.fillText(data.position, 377, y);
       ctx.fillText(data.rating.toString(), 465, y);
       ctx.fillText(abbreviateNumber(data.value), 541, y);

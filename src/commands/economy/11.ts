@@ -1,13 +1,7 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
-import {
-  getPlayerData,
-  getPlayerKey,
-  playerExists,
-  promotePlayer,
-  removeFromStarters,
-} from '@lib/utils/players';
+import { getPlayerData, getPlayerKey, playerExists } from '@lib/utils/players';
 import { RGEmbed } from '@lib/structures/RGEmbed';
 import { renderXI } from '@lib/utils/renderXI';
 import { resolveKey } from '@sapphire/plugin-i18next';
@@ -151,7 +145,7 @@ export class XICommand extends Command {
 
       if (players.length === 1) {
         const playerToPromote = playersData[0];
-        const result = await promotePlayer(
+        const result = await this.container.db.promotePlayer(
           interaction.user.id,
           getPlayerKey(playerToPromote.name, playerToPromote.type)
         );
@@ -188,7 +182,7 @@ export class XICommand extends Command {
               .setImage(cardImage)
               .setFooter({
                 iconURL: interaction.user.displayAvatarURL(),
-                text: `Page ${players.indexOf(plr) + 1}/${players.length}`,
+                text: `Page ${playersData.indexOf(plr) + 1}/${players.length}`,
               })
               .setDescription(
                 `\`Value: ${toLocaleString(plr.value)}\`\n\`Position: ${
@@ -263,7 +257,7 @@ export class XICommand extends Command {
               });
 
               const playerToPromote = playersData[page - 1];
-              const result = await promotePlayer(
+              const result = await this.container.db.promotePlayer(
                 interaction.user.id,
                 getPlayerKey(playerToPromote.name, playerToPromote.type)
               );
@@ -341,7 +335,7 @@ export class XICommand extends Command {
           ],
         });
 
-      const result = await removeFromStarters(
+      const result = await this.container.db.removeFromStarters(
         interaction.user.id,
         getPlayerKey(plrdt.name, plrdt.type)
       );

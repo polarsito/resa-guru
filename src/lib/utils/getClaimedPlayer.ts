@@ -1,17 +1,17 @@
 import { claim } from '@lib/assets/probabilities.json';
-import plrs from '@lib/assets/players.json';
-import specialPlrs from '@lib/assets/special_players.json';
 import type { PlayerData } from '../../types/PlayerData';
+import { container } from '@sapphire/framework';
 
 export function getClaimedPlayer(): PlayerData {
   const probabilities = claim;
-
+  const plrs = container.players;
   const playersMixed: PlayerData[] = [];
+
   for (let i = 0; i < Object.keys(probabilities).length; i++) {
     const key = Object.keys(probabilities)[i];
     const ratings = key.split('-');
 
-    const playersData = [...Object.values(plrs), ...Object.values(specialPlrs)];
+    const playersData = Object.values(plrs);
     const players: PlayerData[] = [];
     for (let t = 0; t < playersData.length; t++) {
       const player = playersData[t];
