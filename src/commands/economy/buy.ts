@@ -2,7 +2,7 @@ import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { getPlayerData, getPlayerKey, playerExists } from '@lib/utils/players';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import {
   ActionRowBuilder,
   ButtonBuilder,

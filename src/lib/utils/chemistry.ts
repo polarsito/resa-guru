@@ -1,4 +1,4 @@
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import { container } from '@sapphire/framework';
 
 export async function getTeamChemistry(userId: string): Promise<object> {

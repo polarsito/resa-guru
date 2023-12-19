@@ -1,5 +1,5 @@
-import type { PlayerData } from '../../types/PlayerData';
 import { container } from '@sapphire/framework';
+import { PlayerData } from 'types/PlayerData';
 
 export async function hasPlayer(
   userId: string,

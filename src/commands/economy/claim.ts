@@ -209,7 +209,9 @@ export class ClaimCommand extends Command {
           }
         );
       } else if (i.customId === 'promote-starters') {
-        const data = await users.findOne({ userId: i.user.id }).lean();
+        const data = await this.container.db.getUserData(i.user.id, [
+          'starters',
+        ]);
         if (
           Object.values(data?.starters!)?.filter((k) => k !== null).length ===
           11

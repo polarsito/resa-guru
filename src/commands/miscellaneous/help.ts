@@ -3,7 +3,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
 import { Colors } from 'discord.js';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { LanguageKeys } from '../../lib/i18n/language';
+import { LanguageKeys } from '@lib/i18n/language';
 
 @ApplyOptions<Command.Options>({
   name: 'help',

@@ -1,6 +1,6 @@
 import { container } from '@sapphire/framework';
-import type { MatchResult } from '../../types/MatchResult';
-import type { UserData } from '../../types/UserData';
+import type { MatchResult } from 'types/MatchResult';
+import type { UserData } from 'types/UserData';
 import { getTeamChemistry } from './chemistry';
 
 export async function match(

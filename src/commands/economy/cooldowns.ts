@@ -1,7 +1,6 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { RGEmbed } from '@lib/structures/RGEmbed';
-import { cooldowns } from '../../models/cooldowns';
 import { getTimeObject } from 'quick-ms/lib';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
@@ -30,12 +29,7 @@ export class CooldownsCommand extends Command {
     interaction: Command.ChatInputCommandInteraction
   ): Promise<void> {
     await interaction.deferReply();
-
-    const data = await cooldowns
-      .findOne({
-        userId: interaction.user.id,
-      })
-      .lean();
+    const data = await this.container.db.getCooldownData(interaction.user.id);
 
     const claimCooldown =
       data?.claim?.cooldown! && Date.now() - data?.claim?.date! < 0

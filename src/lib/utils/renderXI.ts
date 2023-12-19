@@ -1,7 +1,7 @@
 import { createCanvas, loadImage } from 'canvas';
 import { AttachmentBuilder } from 'discord.js';
 import { join } from 'path';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import { getPlayerCard } from './getPlayerCard';
 import { getPlayerKey } from './players';
 import { toLocaleString } from './toLocaleString';

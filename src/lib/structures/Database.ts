@@ -2,9 +2,9 @@ import { connect } from 'mongoose';
 import chalk from 'chalk';
 import { container } from '@sapphire/framework';
 import users from '@models/users';
-import { UserData } from '../../types/UserData';
+import { UserData } from 'types/UserData';
 import { cooldowns } from '@models/cooldowns';
-import { CooldownData } from '../../types/CooldownData';
+import { CooldownData } from 'types/CooldownData';
 export default class Database {
   // Connect the database
   public connect(uri: string): void {
@@ -15,12 +15,26 @@ export default class Database {
     );
   }
 
+  // Get user's cooldowns data
+  public async getCooldownData(userId: string): Promise<CooldownData> {
+    const data = await cooldowns.findOne({ userId }).lean();
+    return data;
+  }
+
   // Get user's lean data
   public async getUserData(
     userId: string,
     selections: (keyof UserData)[]
   ): Promise<UserData> {
     const data = await users.findOne({ userId }).select(selections).lean();
+    return data;
+  }
+
+  //
+  public async getAllUsersData(
+    selections: (keyof UserData)[]
+  ): Promise<UserData[]> {
+    const data = await users.find().select(selections).lean();
     return data;
   }
 

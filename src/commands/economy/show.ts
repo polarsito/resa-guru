@@ -11,7 +11,7 @@ import { RGEmbed } from '@lib/structures/RGEmbed';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import { getPlayerCard } from '@lib/utils/getPlayerCard';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import {
   ButtonInteraction,
   ButtonStyle,

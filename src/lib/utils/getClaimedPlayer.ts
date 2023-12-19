@@ -1,5 +1,5 @@
 import { claim } from '@lib/assets/probabilities.json';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import { container } from '@sapphire/framework';
 
 export function getClaimedPlayer(): PlayerData {

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "build",
-    "types": ["node", "google-spreadsheet"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext",
@@ -18,7 +17,7 @@
       "@commands/*": ["commands/*"],
       "@listeners/*": ["listeners/*"],
       "@assets/*": ["assets/*"],
-      "@types/*": ["types/*"]
+      "types/*": ["types/*"]
     }
   },
   "include": ["./src"],

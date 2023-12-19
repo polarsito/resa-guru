@@ -7,7 +7,7 @@ import users from '@models/users';
 import { JWT } from 'google-auth-library';
 // @ts-ignore
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { PlayerData, Players } from '../../types/PlayerData';
+import { PlayerData, Players } from 'types/PlayerData';
 import chalk from 'chalk';
 
 export class RESAGuru extends SapphireClient {

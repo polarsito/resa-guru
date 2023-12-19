@@ -6,7 +6,7 @@ import { RGEmbed } from '@lib/structures/RGEmbed';
 import { renderXI } from '@lib/utils/renderXI';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import {
   ActionRowBuilder,
   ButtonBuilder,

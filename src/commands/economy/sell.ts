@@ -7,7 +7,7 @@ import {
   hasPlayer,
   playerExists,
 } from '@lib/utils/players';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import { EmbedBuilder } from '@discordjs/builders';
 import {
   ActionRowBuilder,

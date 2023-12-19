@@ -2,10 +2,10 @@ import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
 import { Colors } from 'discord.js';
-import { getRealTime } from '../../lib/utils/getRealTime';
+import { getRealTime } from '@lib/utils/getRealTime';
 import os from 'os';
 import { resolveKey } from '@sapphire/plugin-i18next';
-import { LanguageKeys } from '../../lib/i18n/language';
+import { LanguageKeys } from '@lib/i18n/language';
 
 @ApplyOptions<Command.Options>({
   name: 'info',

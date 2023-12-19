@@ -2,7 +2,6 @@ import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedBuilder } from '@discordjs/builders';
 import { Colors } from 'discord.js';
-import users from '../../models/users';
 import { match } from '@lib/utils/match';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { CooldownEmbed } from '@lib/structures/CooldownEmbed';
@@ -53,8 +52,17 @@ export class FriendlyCommand extends Command {
     const user = interaction.options.getUser('mention');
     if (!user) return;
 
-    const homeData = await users.findOne({ userId: interaction.user.id });
-    const opponentData = await users.findOne({ userId: user.id });
+    const homeData = await this.container.db.getUserData(interaction.user.id, [
+      'clubName',
+      'userId',
+      'starters',
+    ]);
+
+    const opponentData = await this.container.db.getUserData(user.id, [
+      'clubName',
+      'userId',
+      'starters',
+    ]);
 
     if (
       Object.values(homeData?.starters!)?.filter((k) => k !== null).length! < 11

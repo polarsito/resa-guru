@@ -1,5 +1,5 @@
 import { container } from '@sapphire/framework';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 
 export async function getPlayerCard(player: PlayerData): Promise<string> {
   let fileId: string;

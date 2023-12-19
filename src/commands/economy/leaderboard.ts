@@ -1,6 +1,5 @@
 import { Command, ChatInputCommand } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import users from '../../models/users';
 import { RGEmbed } from '@lib/structures/RGEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
 import { resolveKey } from '@sapphire/plugin-i18next';
@@ -38,7 +37,8 @@ export class LeaderboardCommand extends Command {
 
     const subCommand = interaction.options.getSubcommand(true);
     if (subCommand === 'balance') {
-      const data = await users.find().sort({ money: -1 }).lean();
+      const users = await this.container.db.getAllUsersData(['money']);
+      const data = users.sort((a, b) => b.money - a.money);
       const sortedUsers = data.slice(0, 5);
 
       const fields: string[] = [];

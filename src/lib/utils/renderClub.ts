@@ -1,7 +1,7 @@
 import { createCanvas, loadImage } from 'canvas';
 import { AttachmentBuilder } from 'discord.js';
 import { join } from 'path';
-import type { PlayerData } from '../../types/PlayerData';
+import type { PlayerData } from 'types/PlayerData';
 import { abbreviateNumber } from './abbreviateNumber';
 import { container } from '@sapphire/framework';
 
