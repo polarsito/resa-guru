@@ -30,14 +30,12 @@ export class BalanceCommand extends Command {
     await interaction.deferReply();
     const money = await this.container.db.getBalance(interaction.user.id);
 
-    const embed = new RGEmbed(interaction.user)
-      .setColor(Colors.White)
-      .setDescription(
-        `<@${interaction.user.id}> ${await resolveKey(
-          interaction,
-          LanguageKeys.Utils.Balance
-        )} **${toLocaleString(money)}** :moneybag:`
-      );
+    const embed = new RGEmbed(interaction.user).setDescription(
+      `<@${interaction.user.id}> ${await resolveKey(
+        interaction,
+        LanguageKeys.Utils.Balance
+      )} **${toLocaleString(money)}** :moneybag:`
+    );
 
     return interaction.followUp({
       embeds: [embed],

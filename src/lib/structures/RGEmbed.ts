@@ -1,10 +1,10 @@
 import { EmbedBuilder } from '@discordjs/builders';
-import { Colors, User } from 'discord.js';
+import { User } from 'discord.js';
 
 export class RGEmbed extends EmbedBuilder {
   constructor(user?: User) {
     super({
-      color: Colors.White,
+      color: parseInt('280800', 16),
       footer: user
         ? {
             text: user.username,
