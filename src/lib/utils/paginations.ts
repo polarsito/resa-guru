@@ -5,6 +5,9 @@ import { PlayerPaginationOptions } from 'types/Pagination';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { toLocaleString } from './toLocaleString';
 import { getPlayerSellValue } from './getPlayerSellValue';
+import { resolveKey } from '@sapphire/plugin-i18next';
+import { LanguageKeys } from '@lib/i18n/language';
+import { Command } from '@sapphire/framework';
 
 export const playerPagination = (
   players: PlayerData[],
@@ -29,9 +32,10 @@ export const playerPagination = (
           )
         )
         .setFooter({
-          text: `Page ${
-            players.indexOf(player) + 1
-          }/${players.length.toLocaleString()}`,
+          text: `${await resolveKey(
+            options.interaction,
+            LanguageKeys.Utils.Page
+          )} ${players.indexOf(player) + 1}/${players.length.toLocaleString()}`,
         })
     );
   });

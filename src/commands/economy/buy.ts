@@ -70,6 +70,7 @@ export class BuyCommand extends Command {
 
     let embeds = playerPagination(data, {
       title: '{playerName}',
+      interaction: interaction,
       description: `${await resolveKey(
         interaction,
         LanguageKeys.Utils.Value

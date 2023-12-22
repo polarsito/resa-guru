@@ -24,3 +24,5 @@ export const SellsFor = 'utils:SELLS_FOR';
 export const QuickSell = 'utils:QUICK_SELL';
 export const Position = 'utils:POSITION';
 export const SlowDown = 'utils:SLOWDOWN';
+export const RGRewards = 'utils:RG_REWARDS';
+export const Page = 'utils:PAGE';

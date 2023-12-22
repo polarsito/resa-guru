@@ -9,26 +9,31 @@ import { ActivityType } from 'discord.js';
   name: 'Client Ready',
 })
 export class ClientReadyListener extends Listener {
-  public run(client: RESAGuru) {
+  public async run(client: RESAGuru) {
     this.container.logger.info(
       `${chalk.red('[Client]:')} Logged in as ${client.user?.tag}`
     );
 
+    await this.setPresence();
     setInterval(async () => {
-      const guilds = await this.container.client.guilds.fetch();
-      let users = 0;
-      for (const [_s, guild] of guilds) {
-        users += (await guild.fetch()).memberCount;
-      }
-      this.container.client.user?.setPresence({
-        status: 'dnd',
-        activities: [
-          {
-            name: `${users.toLocaleString()} users and ${guilds.size.toLocaleString()} servers`,
-            type: ActivityType.Watching,
-          },
-        ],
-      });
+      await this.setPresence();
     }, 1000 * 60 * 5);
+  }
+
+  async setPresence(): Promise<void> {
+    const guilds = await this.container.client.guilds.fetch();
+    let users = 0;
+    for (const [_s, guild] of guilds) {
+      users += (await guild.fetch()).memberCount;
+    }
+    this.container.client.user?.setPresence({
+      status: 'dnd',
+      activities: [
+        {
+          name: `${users.toLocaleString()} users and ${guilds.size.toLocaleString()} servers`,
+          type: ActivityType.Watching,
+        },
+      ],
+    });
   }
 }

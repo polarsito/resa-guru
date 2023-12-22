@@ -94,6 +94,7 @@ export class SellCommand extends Command {
 
     const embeds = playerPagination(data, {
       title: '{playerName}',
+      interaction: interaction,
       description: (
         await resolveKey(interaction, LanguageKeys.Utils.SalePrice)
       ).replace('{value}', '{playerSellValue}'),

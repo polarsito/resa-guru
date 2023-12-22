@@ -1,32 +1,65 @@
 import { model, Schema } from 'mongoose';
-import { UserData } from '../types/UserData';
+import { UserData } from 'types/UserData';
+import type { Stats } from 'types/Stats';
 
-export default model<UserData>(
-  'users',
-  new Schema({
-    userId: {
-      type: String,
-      required: true,
-      unique: true,
+const tasksSchema = new Schema<Stats>(
+  {
+    claims: {
+      total: {
+        type: Number,
+        default: 0,
+      },
+      players: {
+        type: Schema.Types.Map,
+        default: {},
+      },
     },
-    money: {
+    matchWins: {
       type: Number,
       default: 0,
     },
-    club: {
-      type: [String],
-      default: [],
+    scoredPens: {
+      type: Number,
+      default: 0,
     },
-    starters: {
-      type: Object,
-      default: {},
-    },
-    clubName: {
-      type: String,
-    },
-    language: {
-      type: String,
-      default: 'en-US',
-    },
-  })
+  },
+  { _id: false }
 );
+
+const userSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  money: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
+  club: {
+    type: [String],
+    default: [],
+    required: true,
+  },
+  starters: {
+    type: Object,
+    default: {},
+    required: true,
+  },
+  clubName: {
+    type: String,
+  },
+  language: {
+    type: String,
+    default: 'en-US',
+    required: true,
+  },
+  stats: {
+    type: tasksSchema,
+    default: () => ({}),
+    required: true,
+  },
+});
+
+export default model<UserData>('users', userSchema);

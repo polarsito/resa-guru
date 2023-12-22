@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { CooldownData } from '../types/CooldownData';
+import { CooldownData } from 'types/CooldownData';
 
 export const cooldowns = model(
   'cooldowns',
@@ -12,14 +12,17 @@ export const cooldowns = model(
     claim: {
       type: Object,
       default: {},
+      required: true,
     },
     daily: {
       type: Object,
       default: {},
+      required: true,
     },
     friendly: {
       type: Object,
       default: {},
+      required: true,
     },
   })
 );

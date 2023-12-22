@@ -108,6 +108,7 @@ export class ClaimCommand extends Command {
       this.name,
       1000 * 60 * 60
     );
+    await this.container.db.addClaim(interaction.user.id, player);
 
     const collector = reply.createMessageComponentCollector({
       idle: 1000 * 60,

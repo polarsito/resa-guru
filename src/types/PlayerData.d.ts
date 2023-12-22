@@ -1,4 +1,4 @@
-type Ranks =
+export type Ranks =
   | 'E+'
   | 'D-'
   | 'D'

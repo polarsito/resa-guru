@@ -166,6 +166,7 @@ export class XICommand extends Command {
       } else {
         const embeds = playerPagination(playersData, {
           title: 'Select a player to promote',
+          interaction: interaction,
           description: `\`${await resolveKey(
             interaction,
             LanguageKeys.Utils.Value

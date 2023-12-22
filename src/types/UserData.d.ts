@@ -1,3 +1,5 @@
+import { TasksProgress } from './Stats';
+
 export interface UserData {
   userId: string;
   money: number;
@@ -5,4 +7,5 @@ export interface UserData {
   starters: object;
   clubName?: string;
   language?: string;
+  tasks: TasksProgress;
 }

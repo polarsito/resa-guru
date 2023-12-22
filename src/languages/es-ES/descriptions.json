@@ -15,5 +15,6 @@
     "INFO": "Información sobre el bot",
     "SHOW": "Muestra un jugador de tu club de la temporada actual",
     "SWAP": "Mueve jugadores alrededor de tu equipo",
-    "LEADERBOARD_BALANCE": "Muestra la clasifición de saldos más altos"
+    "LEADERBOARD_BALANCE": "Muestra la clasifición de saldos más altos",
+    "REWARDS": "Completa cada una de las siguientes tareas y reclama tu recompensa"
 }

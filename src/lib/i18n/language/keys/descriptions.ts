@@ -16,3 +16,4 @@ export const ShowDescription = 'descriptions:SHOW';
 export const SwapDescription = 'descriptions:SWAP';
 export const LeaderboardBalanceDescription = 'descriptions:LEADERBOARD_BALANCE';
 export const LanguageDescription = 'descriptions:LANGUAGE_DESCRIPTION';
+export const RewardsDescription = 'descriptions:REWARDS';

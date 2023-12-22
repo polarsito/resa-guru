@@ -89,6 +89,7 @@ export class ShowCommand extends Command {
         interaction.user.tag
       }`,
       description: `\`Value: {playerValue}\`\n\`Position: {playerPosition}\``,
+      interaction: interaction,
     });
 
     const row = getPaginationButtonsRow();

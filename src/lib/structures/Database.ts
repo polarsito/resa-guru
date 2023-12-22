@@ -6,6 +6,8 @@ import { UserData } from 'types/UserData';
 import { cooldowns } from '@models/cooldowns';
 import { CooldownData } from 'types/CooldownData';
 import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
+import { PlayerData } from '@src/types/PlayerData';
+import { Stats } from '@src/types/Stats';
 export default class Database {
   // Connect the database
   public connect(uri: string): void {
@@ -27,7 +29,12 @@ export default class Database {
     userId: string,
     selections: (keyof UserData)[]
   ): Promise<UserData> {
-    const data = await users.findOne({ userId }).select(selections).lean();
+    let data = await users.findOne({ userId }).select(selections).lean();
+    if (!data) {
+      data = await users.create({
+        userId,
+      });
+    }
     return data;
   }
 
@@ -150,6 +157,7 @@ export default class Database {
     );
   }
 
+  // Swap a player on the 11
   public async swap(userId: string, pos1: string, pos2: string): Promise<void> {
     const data = await this.getUserData(userId, ['starters']);
 
@@ -168,6 +176,7 @@ export default class Database {
     );
   }
 
+  // Promote a player to the 11
   public async promotePlayer(userId: string, player: string): Promise<boolean> {
     const userData = await this.getUserData(userId, ['starters']);
     if (!userData) return false;
@@ -215,6 +224,7 @@ export default class Database {
     } else return false;
   }
 
+  // Remove a player from the user's 11
   public async removeFromStarters(
     userId: string,
     player: string
@@ -249,6 +259,7 @@ export default class Database {
     return removed;
   }
 
+  // Add a player to the user's club
   public async addPlayerToClub(userId: string, player: string): Promise<void> {
     await users.updateOne(
       {
@@ -265,6 +276,7 @@ export default class Database {
     );
   }
 
+  // Sell a player
   public async sellPlayer(
     userId: string,
     player: string,
@@ -305,6 +317,7 @@ export default class Database {
     return true;
   }
 
+  // Multisell players
   public async multisellPlayers(
     userId: string,
     starting: number,
@@ -338,6 +351,7 @@ export default class Database {
     );
   }
 
+  // Buy a player
   public async buyPlayer(userId: string, player: string): Promise<boolean> {
     const value = container.players[player].value;
 
@@ -345,5 +359,30 @@ export default class Database {
     await this.addPlayerToClub(userId, player);
 
     return true;
+  }
+
+  // Add player claim
+  public async addClaim(userId: string, player: PlayerData): Promise<void> {
+    const data = await this.getUserData(userId, ['tasks']);
+    await users.updateOne(
+      {
+        userId,
+      },
+      {
+        $inc: {
+          'tasks.claims.total': 1,
+          [`tasks.claims.players.${player.rank}`]: 1,
+        },
+      },
+      {
+        upsert: true,
+      }
+    );
+  }
+
+  // Get player claims
+  public async getPlayerTasks(userId: string): Promise<Stats> {
+    const data = await this.getUserData(userId, ['tasks']);
+    return data?.tasks!;
   }
 }
