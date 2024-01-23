@@ -87,8 +87,9 @@ export class MultisellCommand extends Command {
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
-    if (endingId > data.club.length) endingId = data.club.length;
-    const plrs = data.club
+    if (endingId > Object.keys(data.club!).length)
+      endingId = Object.keys(data.club).length;
+    const plrs = Object.keys(data.club!)
       .slice(startingId - 1, endingId)
       .filter((d) => typeof d === 'string');
     console.log(plrs);

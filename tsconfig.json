@@ -16,8 +16,8 @@
       "@lib/*": ["lib/*"],
       "@commands/*": ["commands/*"],
       "@listeners/*": ["listeners/*"],
-      "@assets/*": ["assets/*"],
-      "@src/*": ["./*"],
+      "@config": ["./config.json"],
+      "@languages": ["languages/*"],
       "types/*": ["types/*"]
     }
   },

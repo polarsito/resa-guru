@@ -1,5 +1,6 @@
 import { container } from '@sapphire/framework';
 import { PlayerData } from 'types/PlayerData';
+import { ratings } from '@lib/assets/players.json';
 
 export async function hasPlayer(
   userId: string,
@@ -7,13 +8,13 @@ export async function hasPlayer(
 ): Promise<boolean> {
   const userData = await container.db.getUserData(userId, ['club']);
 
-  return userData!.club?.some((p) => p === player);
+  return Object.keys(userData!.club!).some((p) => p === player);
 }
 
 export function playerExists(name: string): boolean {
   const players = Object.keys(container.players);
-  const allPlayers = players;
-  return allPlayers.some(
+
+  return players.some(
     (p) =>
       p.toLowerCase() === name.toLowerCase() ||
       (p.includes('*') && p.toLowerCase().includes(name.toLowerCase()))
@@ -32,5 +33,5 @@ export function getPlayerData(name: string): PlayerData[] {
 }
 
 export function getPlayerKey(name: string, type: string): string {
-  return type !== '0' ? `${name}*${type.toLowerCase()}` : name;
+  return type ? `${name}*${type.toUpperCase()}` : name;
 }

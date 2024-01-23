@@ -29,8 +29,10 @@ export function getClaimedPlayer(): PlayerData {
     }
   }
 
+  const MinTest = playersMixed.filter((p) => p.rating >= 85);
+
   const claimedPlayer: PlayerData =
-    playersMixed[Math.floor(Math.random() * playersMixed.length)];
+    MinTest[Math.floor(Math.random() * MinTest.length)];
 
   return claimedPlayer;
 }

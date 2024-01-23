@@ -3,19 +3,17 @@ import { join } from 'path';
 import Database from '@lib/structures/Database';
 import type { InternationalizationContext } from '@sapphire/plugin-i18next';
 import { UtilsGDrive } from 'utils-google-drive';
-import users from '@models/users';
-import { JWT } from 'google-auth-library';
-// @ts-ignore
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { PlayerData, Players } from 'types/PlayerData';
 import chalk from 'chalk';
+import sheetCredentials from '../../../credentials/sheetCredentials.json';
 
 export class RESAGuru extends SapphireClient {
   private players: Players = {};
 
   constructor() {
     super({
-      intents: ['Guilds'],
+      intents: ['Guilds', 'GuildMessages'],
       allowedMentions: {
         repliedUser: false,
         parse: [],
@@ -42,9 +40,9 @@ export class RESAGuru extends SapphireClient {
       pathCredentials: join(
         process.cwd(),
         'credentials',
-        'drive-credentials.json'
+        'driveCredentials.json'
       ),
-      pathToken: join(process.cwd(), 'credentials', 'drive-token.json'),
+      pathToken: join(process.cwd(), 'credentials', 'driveToken.json'),
     });
     if (container.drive)
       this.logger.info(`${chalk.blue('[Drive API]:')} Connected to the drive!`);
@@ -53,7 +51,7 @@ export class RESAGuru extends SapphireClient {
   }
 
   public async initialize(): Promise<void> {
-    const auth = this.authenticateSheets();
+    const auth = await this.authenticateSheets();
     await this.loadSpreadsheet(auth);
     await this.login();
 
@@ -61,24 +59,23 @@ export class RESAGuru extends SapphireClient {
     if (uri) container.db.connect(uri);
   }
 
-  private async loadSpreadsheet(auth: JWT): Promise<void> {
-    const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID, auth);
+  private async loadSpreadsheet(doc: GoogleSpreadsheet): Promise<void> {
     await doc.loadInfo();
 
-    const sheet = doc.sheetsByTitle['Base Cards'];
+    const sheet = doc.sheetsByTitle['(RANK->NUMBER) Base Cards'];
     const rows = await sheet.getRows();
     rows.forEach((row) => {
       this.addPlayer({
-        name: row.get('NAME'),
-        rank: row.get('RANK'),
-        tier: row.get('TIER'),
-        club: row.get('CLUB'),
-        nation: row.get('NATION'),
-        type: row.get('TYPE') === '0' ? null : row.get('TYPE'),
-        exclusive: row.get('EXCLUSIVE') === 'Y',
-        position: row.get('POSITION'),
-        value: 0,
-        rating: 0,
+        name: row.NAME,
+        rating: Number(row.RATING),
+        tier: row.TIER,
+        club: row.CLUB,
+        nation: row.NATION,
+        type: row.TYPE === '0' ? null : row.TYPE,
+        exclusive: row.EXCLUSIVE === 'Y',
+        position: row.POSITION,
+        value: Number(row.PRICE!) ?? 0,
+        playstyle: row.PLAYSTYLE?.length! > 0 ? row.PLAYSTYLE! : null,
       });
     });
   }
@@ -88,20 +85,14 @@ export class RESAGuru extends SapphireClient {
     this.players[key] = data;
   }
 
-  private authenticateSheets(): JWT {
-    const auth = new JWT({
-      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      keyFile: join(process.cwd(), 'credentials', 'sheet-credentials.json'),
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  private async authenticateSheets(): Promise<GoogleSpreadsheet> {
+    const doc = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
+    await doc.useServiceAccountAuth({
+      client_email: sheetCredentials.client_email,
+      private_key: sheetCredentials.private_key,
     });
 
-    if (auth) {
-      container.logger.info(
-        `${chalk.green('[Sheets API]:')} Connected to the spreadsheet!`
-      );
-
-      return auth;
-    }
+    return doc;
   }
 }
 

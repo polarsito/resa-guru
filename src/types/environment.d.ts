@@ -8,6 +8,7 @@ declare global {
       readonly MONGO_URI: string;
       readonly GOOGLE_SERVICE_ACCOUNT_EMAIL: string;
       readonly SPREADSHEET_ID: string;
+      readonly REFRESH_TOKEN: string;
     }
   }
 }

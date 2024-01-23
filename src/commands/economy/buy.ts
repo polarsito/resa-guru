@@ -68,7 +68,7 @@ export class BuyCommand extends Command {
       (d) => !d.exclusive
     );
 
-    let embeds = playerPagination(data, {
+    let embeds = await playerPagination(data, {
       title: '{playerName}',
       interaction: interaction,
       description: `${await resolveKey(
@@ -81,7 +81,7 @@ export class BuyCommand extends Command {
     });
 
     const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
-      ...getPaginationButtonsRow().components,
+      ...getPaginationButtonsRow(embeds.length).components,
       new ButtonBuilder()
         .setCustomId('confirm-buy')
         .setLabel(
@@ -96,125 +96,122 @@ export class BuyCommand extends Command {
       components: [row],
     });
 
-    if (embeds.length > 1) {
-      let page = 1;
-      const userData = await this.container.db.getUserData(
-        interaction.user.id,
-        ['money']
-      );
+    let page = 1;
+    const userData = await this.container.db.getUserData(interaction.user.id, [
+      'money',
+    ]);
 
-      const collector = reply!.createMessageComponentCollector({
-        idle: 1000 * 60,
-        filter: (i: Interaction) => i.user.id === interaction.user.id,
+    const collector = reply!.createMessageComponentCollector({
+      idle: 1000 * 60,
+      filter: (i: Interaction) => i.user.id === interaction.user.id,
+    });
+    collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
+      await i.deferUpdate();
+
+      row.components[0].setDisabled(true);
+      interaction.editReply({
+        components: [row],
       });
-      collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
-        await i.deferUpdate();
 
-        row.components[0].setDisabled(true);
-        interaction.editReply({
-          components: [row],
-        });
+      if (i.customId === 'confirm-buy') {
+        let player: PlayerData = data.length === 1 ? data[0] : data[page - 1];
+        const cardImage = await getPlayerCard(player);
 
-        if (i.customId === 'confirm-buy') {
-          let player: PlayerData = data.length === 1 ? data[0] : data[page - 1];
-          const cardImage = await getPlayerCard(player);
-
-          if (!userData || (userData && userData.money < player.value))
-            return void interaction.editReply({
-              embeds: [
-                new RGEmbed(interaction.user)
-                  .setTitle(
-                    await resolveKey(
-                      interaction,
-                      LanguageKeys.Utils.TransferBrokeDown
-                    )
-                  )
-                  .setDescription(
-                    `<@${i.user.id}>\n${(
-                      await resolveKey(
-                        interaction,
-                        LanguageKeys.Errors.NotEnoughCreditsToBuy
-                      )
-                    )
-                      .replace('{player}', player.name)
-                      .replace(
-                        '{value}',
-                        toLocaleString(player.value - userData!.money)
-                      )}`
-                  )
-                  .setImage(cardImage),
-              ],
-              components: [],
-            });
-
-          await this.container.db.buyPlayer(
-            interaction.user.id,
-            getPlayerKey(player.name, player.type)
-          );
-          interaction.editReply({
+        if (!userData || (userData && userData.money < player.value))
+          return void interaction.editReply({
             embeds: [
               new RGEmbed(interaction.user)
                 .setTitle(
-                  `${player.name} ${await resolveKey(
+                  await resolveKey(
                     interaction,
-                    LanguageKeys.Utils.JoinsClub
-                  )}`
+                    LanguageKeys.Utils.TransferBrokeDown
+                  )
                 )
                 .setDescription(
                   `<@${i.user.id}>\n${(
                     await resolveKey(
                       interaction,
-                      LanguageKeys.Success.JoinedClubForCredits
+                      LanguageKeys.Errors.NotEnoughCreditsToBuy
                     )
                   )
                     .replace('{player}', player.name)
-                    .replace('{value}', toLocaleString(player.value))}`
+                    .replace(
+                      '{value}',
+                      toLocaleString(player.value - userData!.money)
+                    )}`
                 )
                 .setImage(cardImage),
             ],
             components: [],
           });
 
-          return void collector.stop();
-        } else if (i.customId === 'next' && page !== embeds.length) {
-          page++;
-          if (page === embeds.length) {
-            row.components[1].setDisabled(true);
-            row.components[0].setDisabled(false);
-          }
+        await this.container.db.buyPlayer(
+          interaction.user.id,
+          getPlayerKey(player.name, player.type)
+        );
+        interaction.editReply({
+          embeds: [
+            new RGEmbed(interaction.user)
+              .setTitle(
+                `${player.name} ${await resolveKey(
+                  interaction,
+                  LanguageKeys.Utils.JoinsClub
+                )}`
+              )
+              .setDescription(
+                `<@${i.user.id}>\n${(
+                  await resolveKey(
+                    interaction,
+                    LanguageKeys.Success.JoinedClubForCredits
+                  )
+                )
+                  .replace('{player}', player.name)
+                  .replace('{value}', toLocaleString(player.value))}`
+              )
+              .setImage(cardImage),
+          ],
+          components: [],
+        });
 
-          interaction.editReply({
-            embeds: [embeds[page - 1]],
-            components: [row],
-          });
-        } else if (i.customId === 'back' && page !== 1) {
-          page--;
-          if (page === 1) {
-            row.components[0].setDisabled(true);
-            row.components[1].setDisabled(false);
-          }
-
-          interaction.editReply({
-            embeds: [embeds[page - 1]],
-            components: [row],
-          });
+        return void collector.stop();
+      } else if (i.customId === 'next' && page !== embeds.length) {
+        page++;
+        if (page === embeds.length) {
+          row.components[1].setDisabled(true);
+          row.components[0].setDisabled(false);
         }
-      });
 
-      collector.on('end', (_collected, reason) => {
-        if (reason === 'idle') {
-          if (row.components.length === 1) row.components[0].setDisabled(true);
-          else {
-            row.components[0].setDisabled(true);
-            row.components[1].setDisabled(true);
-            row.components[2].setDisabled(true);
-          }
-
-          interaction.editReply({
-            components: [row],
-          });
+        interaction.editReply({
+          embeds: [embeds[page - 1]],
+          components: [row],
+        });
+      } else if (i.customId === 'back' && page !== 1) {
+        page--;
+        if (page === 1) {
+          row.components[0].setDisabled(true);
+          row.components[1].setDisabled(false);
         }
-      });
-    }
+
+        interaction.editReply({
+          embeds: [embeds[page - 1]],
+          components: [row],
+        });
+      }
+    });
+
+    collector.on('end', (_collected, reason) => {
+      if (reason === 'idle') {
+        if (row.components.length === 1) row.components[0].setDisabled(true);
+        else {
+          row.components[0].setDisabled(true);
+          row.components[1].setDisabled(true);
+          row.components[2].setDisabled(true);
+        }
+
+        interaction.editReply({
+          components: [row],
+        });
+      }
+    });
   }
 }

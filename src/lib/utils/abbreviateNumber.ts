@@ -1,6 +1,6 @@
 export function abbreviateNumber(num: number): string {
   const str = num.toLocaleString();
-  const splitted = str.split(',');
+  const splitted = str.split('.');
 
   let result =
     splitted.length > 1 && splitted[1][0] !== '0'

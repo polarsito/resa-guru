@@ -4,7 +4,7 @@ import { RGEmbed } from '@lib/structures/RGEmbed';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 import { getTaskProgress } from '@lib/utils/tasks';
-import { bot } from '@src/config.json';
+import { bot } from '@config';
 
 @ApplyOptions<Command.Options>({
   name: 'rewards',
@@ -31,13 +31,7 @@ export class RewardsCommand extends Command {
     const emojis = bot.emojis;
     const data = await this.container.db.getPlayerTasks(interaction.user.id);
 
-    const playerClaims = data.claims;
-    const ranks = ['B', 'B+', 'A-', 'A', 'A+', 'X-', 'X', 'X+', 'S'];
-    let rankBs = ranks
-      .map((r) => playerClaims.players[r]!)
-      .filter((r) => r !== undefined)
-      .reduce((a, b) => a + b);
-
+    const playerClaims = data?.claims!;
     const embed = new RGEmbed()
       .setAuthor({
         iconURL: this.container.client.user.displayAvatarURL(),
@@ -51,35 +45,50 @@ export class RewardsCommand extends Command {
       )
       .addFields(
         {
-          name: `${emojis.card} Claim a total of 100 times`,
+          name: `${emojis.card} ${await resolveKey(
+            interaction,
+            LanguageKeys.Rewards.Claim100Times
+          )}`,
           value: await getTaskProgress(
             interaction.user.id,
-            playerClaims.total! ?? 0,
+            playerClaims?.total! ?? 0,
             100
           ),
         },
         {
-          name: `${emojis.cardB} Claim a total of 5 Rank B+`,
-          value: await getTaskProgress(interaction.user.id, rankBs! ?? 0, 5),
+          name: `${emojis.cardB} ${await resolveKey(
+            interaction,
+            LanguageKeys.Rewards.Claim85Plus
+          )}`,
+          value: '0',
         },
         {
-          name: ':trophy: Win a total of 50 matches',
+          name: `:trophy: ${await resolveKey(
+            interaction,
+            LanguageKeys.Rewards.Win50Matches
+          )}`,
           value: await getTaskProgress(
             interaction.user.id,
-            data.matchWins! ?? 0,
+            data?.matchWins! ?? 0,
             5
           ),
         },
         {
-          name: ':goal: Score a total of 25 penalties',
+          name: `:goal: ${await resolveKey(
+            interaction,
+            LanguageKeys.Rewards.Score25Penalties
+          )}`,
           value: await getTaskProgress(
             interaction.user.id,
-            data.scoredPens! ?? 0,
+            data?.scoredPens! ?? 0,
             25
           ),
         },
         {
-          name: ':star: Upgrade a player to level 5',
+          name: `:star: ${await resolveKey(
+            interaction,
+            LanguageKeys.Rewards.UpgradeToLvl5
+          )}`,
           value: await getTaskProgress(interaction.user.id, 0, 5),
         }
       )

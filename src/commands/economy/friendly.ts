@@ -44,7 +44,7 @@ export class FriendlyCommand extends Command {
     );
     if (cooldown && typeof cooldown === 'number') {
       return void interaction.followUp({
-        embeds: [new CooldownEmbed(interaction, cooldown)],
+        embeds: [await new CooldownEmbed(interaction, cooldown).get()],
       });
     }
 

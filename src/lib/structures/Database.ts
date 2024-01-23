@@ -6,8 +6,13 @@ import { UserData } from 'types/UserData';
 import { cooldowns } from '@models/cooldowns';
 import { CooldownData } from 'types/CooldownData';
 import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
-import { PlayerData } from '@src/types/PlayerData';
-import { Stats } from '@src/types/Stats';
+import { PlayerData } from 'types/PlayerData';
+import { Stats } from 'types/Stats';
+import botConfig from '@models/botConfig';
+import type { BotConfiguration, DailyMarketPlayer } from 'types/Configuration';
+import prices from '@lib/assets/prices.json';
+import { getPlayerKey } from '@lib/utils/players';
+
 export default class Database {
   // Connect the database
   public connect(uri: string): void {
@@ -21,6 +26,7 @@ export default class Database {
   // Get user's cooldowns data
   public async getCooldownData(userId: string): Promise<CooldownData> {
     const data = await cooldowns.findOne({ userId }).lean();
+    // @ts-ignore
     return data;
   }
 
@@ -35,6 +41,7 @@ export default class Database {
         userId,
       });
     }
+    // @ts-ignore
     return data;
   }
 
@@ -43,6 +50,7 @@ export default class Database {
     selections: (keyof UserData)[]
   ): Promise<UserData[]> {
     const data = await users.find().select(selections).lean();
+    // @ts-ignore
     return data;
   }
 
@@ -106,13 +114,14 @@ export default class Database {
 
   // Get the language of an user
   public async getUserLanguage(userId: string): Promise<string> {
-    const data = await users.findOne({ userId: userId }).lean();
+    const data = await this.getUserData(userId, ['language']);
     return data?.language! ?? 'en-US';
   }
 
   // Get user's cooldown data
   public async getUserCooldownData(userId: string): Promise<CooldownData> {
     const data = await cooldowns.findOne({ userId }).lean();
+    // @ts-ignore
     return data;
   }
 
@@ -266,8 +275,9 @@ export default class Database {
         userId,
       },
       {
-        $push: {
-          club: player,
+        [`club.${player}`]: {
+          level: 0,
+          xp: 0,
         },
       },
       {
@@ -284,10 +294,16 @@ export default class Database {
   ): Promise<boolean> {
     const userData = await this.getUserData(userId, ['club']);
 
-    if (!userData?.club?.includes(player)) return false;
-    const newClub = userData.club.filter(
+    if (!Object.keys(userData?.club!).includes(player)) return false;
+    const newClub = Object.keys(userData.club).filter(
       (_value: string, i: number) => i !== index
     );
+
+    const obj = userData.club;
+
+    Object.keys(userData.club).forEach((p) => {
+      if (!newClub.includes(p)) delete obj[p];
+    });
 
     const playerValue = container.players[player].value;
     if (isNaN(playerValue!)) return false;
@@ -299,7 +315,7 @@ export default class Database {
       },
       {
         $set: {
-          club: newClub,
+          club: obj,
         },
         $inc: {
           money: moneyToAdd,
@@ -326,13 +342,12 @@ export default class Database {
   ): Promise<void> {
     const userData = await this.getUserData(userId, ['club']);
 
-    const newClub = userData!.club.filter(
-      (_value: string, i: number) => i < starting - 1 || i > ending - 1
-    );
-
-    const plrs = userData?.club.slice(starting - 1, ending);
+    const obj = userData;
+    const plrs = Object.keys(userData?.club).slice(starting - 1, ending);
     for (const plr of plrs!) {
-      if (!newClub.includes(plr) && Object.values(userData?.starters!))
+      delete obj[plr];
+
+      if (!Object.keys(obj).includes(plr) && Object.values(userData?.starters!))
         await this.removeFromStarters(userId, plr);
     }
 
@@ -342,7 +357,7 @@ export default class Database {
       },
       {
         $set: {
-          club: newClub,
+          club: obj,
         },
         $inc: {
           money: money,
@@ -363,15 +378,16 @@ export default class Database {
 
   // Add player claim
   public async addClaim(userId: string, player: PlayerData): Promise<void> {
-    const data = await this.getUserData(userId, ['tasks']);
     await users.updateOne(
       {
         userId,
       },
       {
         $inc: {
-          'tasks.claims.total': 1,
-          [`tasks.claims.players.${player.rank}`]: 1,
+          'stats.claims.total': 1,
+        },
+        $push: {
+          [`stats.claims.players`]: getPlayerKey(player.name, player.type),
         },
       },
       {
@@ -382,7 +398,74 @@ export default class Database {
 
   // Get player claims
   public async getPlayerTasks(userId: string): Promise<Stats> {
-    const data = await this.getUserData(userId, ['tasks']);
-    return data?.tasks!;
+    const data = await this.getUserData(userId, ['stats']);
+    return data?.stats!;
+  }
+
+  // Buy a pack
+  public async buyPack(
+    userId: string,
+    pack: string,
+    price: number
+  ): Promise<void> {
+    await this.addMoney(userId, -price);
+    const result = await users.updateOne(
+      {
+        userId,
+      },
+      {
+        $inc: {
+          [`inventory.packs.${pack}`]: 1,
+        },
+      },
+      {
+        upsert: true,
+      }
+    );
+
+    if (result.modifiedCount === 0 && result.upsertedCount === 0) {
+      await users.updateOne(
+        {
+          userId,
+        },
+        {
+          $setOnInsert: {
+            [`inventory.packs.${pack}`]: 1,
+          },
+        },
+        {
+          upsert: true,
+        }
+      );
+    }
+  }
+
+  // Update daily market
+  public async updateDailyMarket(players: DailyMarketPlayer[]): Promise<void> {
+    await botConfig.updateOne(
+      {
+        clientId: container.client.user.id,
+      },
+      {
+        dailyMarket: players,
+      }
+    );
+  }
+
+  // Get bot configuration
+  public async getBotConfigurationData(
+    clientId: string,
+    selections: (keyof BotConfiguration)[]
+  ): Promise<BotConfiguration> {
+    return await botConfig.findOne({ clientId }).select(selections).lean();
+  }
+
+  // Get inventory packs
+  public async getInventoryPacks(userId: string): Promise<object> {
+    const inv = (await this.getUserData(userId, ['inventory']))?.inventory!;
+
+    // @ts-ignore
+    const packs = inv.packs;
+    return packs;
   }
 }

@@ -17,7 +17,7 @@ export class CooldownEmbed extends EmbedBuilder {
     this.date = date;
   }
 
-  public async get() {
+  public async get(): Promise<this> {
     this.setTitle(await getTranslatedError(this.interaction, 'title'));
     this.setDescription(
       await getTranslatedError(this.interaction, 'description', this.date)
@@ -41,7 +41,7 @@ async function getTranslatedError(
     case 'description':
       error = (
         await resolveKey(interaction, LanguageKeys.Errors.Cooldown)
-      ).replace('{date}', Math.floor((Date.now() + date) / 1000).toString());
+      ).replace('{date}', Math.floor(date / 1000).toString());
       break;
   }
 

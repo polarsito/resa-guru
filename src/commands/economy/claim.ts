@@ -48,7 +48,7 @@ export class ClaimCommand extends Command {
     );
     if (cooldown && typeof cooldown === 'number') {
       return interaction.followUp({
-        embeds: [new CooldownEmbed(interaction, cooldown)],
+        embeds: [await new CooldownEmbed(interaction, cooldown).get()],
       });
     }
 
@@ -68,8 +68,8 @@ export class ClaimCommand extends Command {
         )} - \`${toLocaleString(player.value)}\` / ${await resolveKey(
           interaction,
           LanguageKeys.Utils.SellsFor
-        )} - \`${getPlayerSellValue(
-          player.value
+        )} - \`${toLocaleString(
+          getPlayerSellValue(player.value)
         )}\`\n:coin: \`${await resolveKey(
           interaction,
           LanguageKeys.Utils.QuickSell
@@ -170,7 +170,7 @@ export class ClaimCommand extends Command {
               const sell = await this.container.db.sellPlayer(
                 collected.user.id,
                 player.name,
-                userData.club.lastIndexOf(player.name)
+                Object.keys(userData.club!).lastIndexOf(player.name)
               );
               if (sell) {
                 const newEmbed = new RGEmbed(collected.user)

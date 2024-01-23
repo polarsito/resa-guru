@@ -85,12 +85,12 @@ export class XICommand extends Command {
         'starters',
       ]);
 
-      const players = data.club.filter((p) =>
+      const players = Object.keys(data.club).filter((p) =>
         p.toLowerCase().includes(playerName.toLowerCase())
       );
 
       if (
-        !data.club?.some((p) =>
+        !Object.keys(data.club!).some((p) =>
           p.toLowerCase().includes(playerName.toLowerCase())
         )
       )
@@ -164,7 +164,7 @@ export class XICommand extends Command {
           ],
         });
       } else {
-        const embeds = playerPagination(playersData, {
+        const embeds = await playerPagination(playersData, {
           title: 'Select a player to promote',
           interaction: interaction,
           description: `\`${await resolveKey(
@@ -177,7 +177,7 @@ export class XICommand extends Command {
         });
 
         const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
-          ...getPaginationButtonsRow().components,
+          ...getPaginationButtonsRow(embeds.length).components,
           new ButtonBuilder()
             .setCustomId('promote')
             .setLabel('Promote')
@@ -189,92 +189,87 @@ export class XICommand extends Command {
           components: [row],
         });
 
-        if (embeds.length > 1) {
-          let page = 1;
+        let page = 1;
 
-          const collector = reply.createMessageComponentCollector({
-            idle: 1000 * 60,
-            filter: (u: Interaction) => u.user.id === interaction.user.id,
-          });
+        const collector = reply.createMessageComponentCollector({
+          idle: 1000 * 60,
+          filter: (u: Interaction) => u.user.id === interaction.user.id,
+        });
 
-          collector.on(
-            'collect',
-            async (i: ButtonInteraction): Promise<void> => {
-              await i.deferUpdate();
+        collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
+          await i.deferUpdate();
 
-              if (i.user.id === interaction.user.id) {
-                if (i.customId === 'next' && page !== embeds.length) {
-                  page++;
+          if (i.user.id === interaction.user.id) {
+            if (i.customId === 'next' && page !== embeds.length) {
+              page++;
 
-                  if (page === embeds.length) {
-                    row.components[1].setDisabled(true);
-                    row.components[0].setDisabled(false);
-                  }
-
-                  interaction.editReply({
-                    embeds: [embeds[page - 1]],
-                    components: [row],
-                  });
-                } else if (i.customId === 'back' && page !== 1) {
-                  page--;
-
-                  if (page === 1) {
-                    row.components[0].setDisabled(true);
-                    row.components[1].setDisabled(false);
-                  }
-
-                  interaction.editReply({
-                    embeds: [embeds[page - 1]],
-                    components: [row],
-                  });
-                } else if (i.customId === 'promote') {
-                  row.components[0].setDisabled(true);
-                  row.components[1].setDisabled(true);
-                  interaction.editReply({
-                    components: [row],
-                  });
-
-                  const playerToPromote = playersData[page - 1];
-                  const result = await this.container.db.promotePlayer(
-                    interaction.user.id,
-                    getPlayerKey(playerToPromote.name, playerToPromote.type)
-                  );
-                  if (!result)
-                    return void interaction.editReply({
-                      embeds: [
-                        new ErrorEmbed(
-                          await resolveKey(
-                            interaction,
-                            LanguageKeys.Errors.ErrorOcurred
-                          )
-                        ),
-                      ],
-                    });
-
-                  interaction.editReply({
-                    embeds: [
-                      new RGEmbed(interaction.user).setDescription(
-                        (
-                          await resolveKey(
-                            interaction,
-                            LanguageKeys.Success.PlayerPromoted
-                          )
-                        ).replace('{player}', playerToPromote.name)
-                      ),
-                    ],
-                    components: [],
-                  });
-
-                  return void collector.stop();
-                }
+              if (page === embeds.length) {
+                row.components[1].setDisabled(true);
+                row.components[0].setDisabled(false);
               }
-            }
-          );
 
-          collector.on('end', async (_collected, reason) => {
-            if (reason === 'idle') await interaction.deleteReply();
-          });
-        }
+              interaction.editReply({
+                embeds: [embeds[page - 1]],
+                components: [row],
+              });
+            } else if (i.customId === 'back' && page !== 1) {
+              page--;
+
+              if (page === 1) {
+                row.components[0].setDisabled(true);
+                row.components[1].setDisabled(false);
+              }
+
+              interaction.editReply({
+                embeds: [embeds[page - 1]],
+                components: [row],
+              });
+            } else if (i.customId === 'promote') {
+              row.components[0].setDisabled(true);
+              row.components[1].setDisabled(true);
+              interaction.editReply({
+                components: [row],
+              });
+
+              const playerToPromote = playersData[page - 1];
+              const result = await this.container.db.promotePlayer(
+                interaction.user.id,
+                getPlayerKey(playerToPromote.name, playerToPromote.type)
+              );
+              if (!result)
+                return void interaction.editReply({
+                  embeds: [
+                    new ErrorEmbed(
+                      await resolveKey(
+                        interaction,
+                        LanguageKeys.Errors.ErrorOcurred
+                      )
+                    ),
+                  ],
+                });
+
+              interaction.editReply({
+                embeds: [
+                  new RGEmbed(interaction.user).setDescription(
+                    (
+                      await resolveKey(
+                        interaction,
+                        LanguageKeys.Success.PlayerPromoted
+                      )
+                    ).replace('{player}', playerToPromote.name)
+                  ),
+                ],
+                components: [],
+              });
+
+              return void collector.stop();
+            }
+          }
+        });
+
+        collector.on('end', async (_collected, reason) => {
+          if (reason === 'idle') await interaction.deleteReply();
+        });
       }
     } else if (subCommand === 'remove') {
       const player = interaction.options.getString('player');

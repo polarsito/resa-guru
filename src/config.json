@@ -5,6 +5,11 @@
             "247754038068772864"
         ],
         "emojis": {
+            "info": "<:info:1194455648449089566>",
+            "arrows": {
+                "left_arrow": "<:left_arrow:1194162758413991936>",
+                "right_arrow": "<:right_arrow:1194162760993493012>"
+            },
             "progress_bar": {
                 "start": "<:start:1187152061775740938>",
                 "left_border": "<:borde1:1186865861118656523>",
@@ -14,7 +19,21 @@
             },
             "card": "<:card:1187163385641578536>",
             "cardB": "<:cardB:1187163388594372718>",
-            "union": "<:union:1186859822394658896>"
+            "union": "<:union:1186859822394658896>",
+            "packs": {
+                "classic": "<:ClassicPacks:1193602511089705041>",
+                "gold": "<:GoldPacks:1193602514214465676>",
+                "promo": "<:PromoPacks:1193602509789466735>"
+            }
+        },
+        "quests": {
+            "Claim 5 times": {},
+            "Win 2 matchs": {},
+            "Claim a Rank C+": {},
+            "Buy a player": {},
+            "Score with a Brazilian player": {},
+            "Score a penalty": {},
+            "Win a match with 3 goals of difference": {}
         }
     }
 }

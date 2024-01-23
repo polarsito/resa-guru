@@ -92,7 +92,7 @@ export class SellCommand extends Command {
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
-    const embeds = playerPagination(data, {
+    const embeds = await playerPagination(data, {
       title: '{playerName}',
       interaction: interaction,
       description: (
@@ -101,7 +101,7 @@ export class SellCommand extends Command {
     });
 
     const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
-      ...getPaginationButtonsRow().components,
+      ...getPaginationButtonsRow(embeds.length).components,
       new ButtonBuilder()
         .setCustomId('confirm-sell')
         .setLabel(
@@ -116,93 +116,91 @@ export class SellCommand extends Command {
       components: [row],
     });
 
-    if (embeds.length > 1) {
-      let page = 1;
-      const collector = reply!.createMessageComponentCollector({
-        idle: 1000 * 60,
-        filter: (i: Interaction) => i.user.id === interaction.user.id,
-      });
-      collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
-        await i.deferUpdate();
+    let page = 1;
+    const collector = reply!.createMessageComponentCollector({
+      idle: 1000 * 60,
+      filter: (i: Interaction) => i.user.id === interaction.user.id,
+    });
+    collector.on('collect', async (i: ButtonInteraction): Promise<void> => {
+      await i.deferUpdate();
 
-        if (i.customId === 'confirm-sell') {
-          const player = data.length === 1 ? data[0] : data[page - 1];
-          const sellPrice = getPlayerSellValue(player.value);
-          const cardImage = await getPlayerCard(player);
+      if (i.customId === 'confirm-sell') {
+        const player = data.length === 1 ? data[0] : data[page - 1];
+        const sellPrice = getPlayerSellValue(player.value);
+        const cardImage = await getPlayerCard(player);
 
-          const userData = await this.container.db.getUserData(
-            interaction.user.id,
-            ['club']
-          );
-          const key = getPlayerKey(player.name, player.type);
-          await this.container.db.sellPlayer(
-            interaction.user.id,
-            key,
-            userData.club.lastIndexOf(key)
-          );
-          return void interaction.editReply({
-            embeds: [
-              new RGEmbed()
-                .setTitle(
-                  await resolveKey(interaction, LanguageKeys.Utils.PlayerSold)
-                )
-                .setDescription(
-                  `<@${i.user.id}>\n${(
-                    await resolveKey(
-                      interaction,
-                      LanguageKeys.Success.PlayerSoldForCredits
-                    )
+        const userData = await this.container.db.getUserData(
+          interaction.user.id,
+          ['club']
+        );
+        const key = getPlayerKey(player.name, player.type);
+        await this.container.db.sellPlayer(
+          interaction.user.id,
+          key,
+          Object.keys(userData.club!).lastIndexOf(key)
+        );
+        return void interaction.editReply({
+          embeds: [
+            new RGEmbed()
+              .setTitle(
+                await resolveKey(interaction, LanguageKeys.Utils.PlayerSold)
+              )
+              .setDescription(
+                `<@${i.user.id}>\n${(
+                  await resolveKey(
+                    interaction,
+                    LanguageKeys.Success.PlayerSoldForCredits
                   )
-                    .replace('{player}', player.name)
-                    .replace('{value}', toLocaleString(sellPrice))}`
                 )
-                .setImage(cardImage)
-                .setFooter({
-                  text: interaction.user.username,
-                  iconURL: interaction.user.displayAvatarURL(),
-                })
-                .setTimestamp(),
-            ],
-            components: [],
-          });
-        } else if (i.customId === 'next' && page !== embeds.length) {
-          page++;
+                  .replace('{player}', player.name)
+                  .replace('{value}', toLocaleString(sellPrice))}`
+              )
+              .setImage(cardImage)
+              .setFooter({
+                text: interaction.user.username,
+                iconURL: interaction.user.displayAvatarURL(),
+              })
+              .setTimestamp(),
+          ],
+          components: [],
+        });
+      } else if (i.customId === 'next' && page !== embeds.length) {
+        page++;
 
-          if (page === embeds.length) {
-            row.components[1].setDisabled(true);
-            row.components[0].setDisabled(false);
-          }
-
-          interaction.editReply({
-            embeds: [embeds[page - 1]],
-            components: [row],
-          });
-        } else if (i.customId === 'back' && page !== 1) {
-          page--;
-
-          if (page === 1) {
-            row.components[0].setDisabled(true);
-            row.components[1].setDisabled(false);
-          }
-
-          interaction.editReply({
-            embeds: [embeds[page - 1]],
-            components: [row],
-          });
+        if (page === embeds.length) {
+          row.components[1].setDisabled(true);
+          row.components[0].setDisabled(false);
         }
-      });
 
-      collector.on('end', (_collected, reason) => {
-        if (reason === 'idle') {
-          if (row.components.length === 1) row.components[0].setDisabled(true);
-          else {
-            row.components[0].setDisabled(true);
-            row.components[1].setDisabled(true);
-            row.components[2].setDisabled(true);
-          }
-          interaction.editReply({ components: [row] });
+        interaction.editReply({
+          embeds: [embeds[page - 1]],
+          components: [row],
+        });
+      } else if (i.customId === 'back' && page !== 1) {
+        page--;
+
+        if (page === 1) {
+          row.components[0].setDisabled(true);
+          row.components[1].setDisabled(false);
         }
-      });
-    }
+
+        interaction.editReply({
+          embeds: [embeds[page - 1]],
+          components: [row],
+        });
+      }
+    });
+
+    collector.on('end', (_collected, reason) => {
+      if (reason === 'idle') {
+        if (row.components.length === 1) row.components[0].setDisabled(true);
+        else {
+          row.components[0].setDisabled(true);
+          row.components[1].setDisabled(true);
+          row.components[2].setDisabled(true);
+        }
+        interaction.editReply({ components: [row] });
+      }
+    });
   }
 }

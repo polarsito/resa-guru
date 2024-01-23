@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { UserData } from 'types/UserData';
+import { InventoryData, UserData } from 'types/UserData';
 import type { Stats } from 'types/Stats';
 
 const tasksSchema = new Schema<Stats>(
@@ -10,8 +10,8 @@ const tasksSchema = new Schema<Stats>(
         default: 0,
       },
       players: {
-        type: Schema.Types.Map,
-        default: {},
+        type: Array,
+        default: [],
       },
     },
     matchWins: {
@@ -26,7 +26,11 @@ const tasksSchema = new Schema<Stats>(
   { _id: false }
 );
 
-const userSchema = new Schema({
+const inventorySchema = new Schema<InventoryData>({
+  packs: Object,
+});
+
+const userSchema = new Schema<UserData>({
   userId: {
     type: String,
     required: true,
@@ -38,14 +42,19 @@ const userSchema = new Schema({
     required: true,
   },
   club: {
-    type: [String],
-    default: [],
+    type: Object,
+    default: {},
     required: true,
   },
   starters: {
     type: Object,
     default: {},
     required: true,
+  },
+  inventory: {
+    type: inventorySchema,
+    required: true,
+    default: () => ({}),
   },
   clubName: {
     type: String,

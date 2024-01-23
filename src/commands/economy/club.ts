@@ -40,7 +40,7 @@ export class ClubCommand extends Command {
     const userData = await this.container.db.getUserData(interaction.user.id, [
       'club',
     ]);
-    if (!userData || !userData.club || userData.club.length! <= 0)
+    if (!userData || !userData.club || Object.keys(userData.club!).length <= 0)
       return void interaction
         .editReply({
           embeds: [
@@ -51,7 +51,7 @@ export class ClubCommand extends Command {
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
-    let attachments = await renderClub(userData.club);
+    let attachments = await renderClub(Object.keys(userData.club));
 
     const row = new ActionRowBuilder<ButtonBuilder>().setComponents(
       new ButtonBuilder()

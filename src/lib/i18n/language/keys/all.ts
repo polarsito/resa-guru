@@ -4,3 +4,4 @@ export * as Errors from './errors';
 export * as Confirmations from './confirmations';
 export * as Information from './info';
 export * as Utils from './utils';
+export * as Rewards from './rewards';

@@ -1,6 +1,6 @@
 import { Precondition } from '@sapphire/framework';
 import type { CommandInteraction } from 'discord.js';
-import { bot } from '@src/config.json';
+import { bot } from '@config';
 import { resolveKey } from '@sapphire/plugin-i18next';
 import { LanguageKeys } from '@lib/i18n/language';
 

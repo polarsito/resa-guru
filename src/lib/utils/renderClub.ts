@@ -34,8 +34,9 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
   let addedPageMessage = false;
   for (let i = 1; i <= plrs.length; i++) {
     ctx.textAlign = 'start';
-    const data: PlayerData = players[i - 1];
-    const actualPage = Math.floor(i / 10) + 1;
+    const data: PlayerData = players[plrs[i - 1]];
+
+    const actualPage = Math.floor(i / 9) + 1;
 
     if (!addedPageMessage) {
       addedPageMessage = true;
@@ -65,7 +66,7 @@ export async function renderClub(plrs: string[]): Promise<AttachmentBuilder[]> {
       ctx.fillText(data.rating.toString(), 465, y);
       ctx.fillText(abbreviateNumber(data.value), 541, y);
       ctx.fillText(abbreviateNumber(getPlayerSellValue(data.value)), 603, y);
-      ctx.fillText(data.type, 662, y);
+      ctx.fillText(data.type ?? '0', 662, y);
 
       y += 14;
       if (plrs.length > i + 1) ctx.drawImage(line, 77, y, 621, 1);

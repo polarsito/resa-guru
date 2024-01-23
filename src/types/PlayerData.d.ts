@@ -17,7 +17,7 @@ export type Ranks =
   | 'X+'
   | 'S';
 
-type Tiers = 'T1' | 'T2' | 'T3';
+type Tiers = 'T1G1' | 'T1G2' | 'T2G1' | 'T2G2' | 'T3';
 type Positions = 'GK' | 'CB' | 'CM' | 'ST';
 
 export type Players = {
@@ -26,7 +26,6 @@ export type Players = {
 
 export type PlayerData = {
   name: string;
-  rank: Ranks;
   rating: number;
   tier: Tiers;
   position: Positions;
@@ -34,5 +33,6 @@ export type PlayerData = {
   club: string;
   type: string;
   value: number;
+  playstyle?: string;
   exclusive?: boolean;
 };

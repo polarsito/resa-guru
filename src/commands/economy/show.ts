@@ -84,7 +84,7 @@ export class ShowCommand extends Command {
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
-    const embeds = playerPagination(players, {
+    const embeds = await playerPagination(players, {
       title: `${await resolveKey(interaction, LanguageKeys.Utils.OwnedBy)} ${
         interaction.user.tag
       }`,
@@ -92,63 +92,61 @@ export class ShowCommand extends Command {
       interaction: interaction,
     });
 
-    const row = getPaginationButtonsRow();
+    const row = getPaginationButtonsRow(embeds.length);
 
     const reply = await interaction.editReply({
       embeds: [embeds[0]],
       components: [row],
     });
 
-    if (embeds.length > 1) {
-      const collector = reply.createMessageComponentCollector({
-        idle: 1000 * 30,
-        filter: (i: Interaction) => i.user.id === interaction.user.id,
-      });
+    const collector = reply.createMessageComponentCollector({
+      idle: 1000 * 30,
+      filter: (i: Interaction) => i.user.id === interaction.user.id,
+    });
 
-      let page = 1;
-      collector.on('collect', async (i: ButtonInteraction) => {
-        await i.deferUpdate();
+    let page = 1;
+    collector.on('collect', async (i: ButtonInteraction) => {
+      await i.deferUpdate();
 
-        if (i.user.id === interaction.user.id) {
-          if (i.customId === 'next' && page !== embeds.length) {
-            page++;
-            if (page === embeds.length) {
-              row.components[1].setDisabled(true);
-              row.components[0].setDisabled(false);
-            }
-
-            interaction.editReply({
-              embeds: [embeds[page - 1]],
-              components: [row],
-            });
-          } else if (i.customId === 'back' && page !== 1) {
-            page--;
-            if (page === 1) {
-              row.components[0].setDisabled(true);
-              row.components[1].setDisabled(false);
-            }
-
-            interaction.editReply({
-              embeds: [embeds[page - 1]],
-              components: [row],
-            });
-          }
-        }
-      });
-
-      collector.on('end', (_collected, reason) => {
-        if (reason === 'idle') {
-          if (row.components.length === 1) row.components[0].setDisabled(true);
-          else {
-            row.components[0].setDisabled(true);
+      if (i.user.id === interaction.user.id) {
+        if (i.customId === 'next' && page !== embeds.length) {
+          page++;
+          if (page === embeds.length) {
             row.components[1].setDisabled(true);
+            row.components[0].setDisabled(false);
           }
 
           interaction.editReply({
+            embeds: [embeds[page - 1]],
+            components: [row],
+          });
+        } else if (i.customId === 'back' && page !== 1) {
+          page--;
+          if (page === 1) {
+            row.components[0].setDisabled(true);
+            row.components[1].setDisabled(false);
+          }
+
+          interaction.editReply({
+            embeds: [embeds[page - 1]],
             components: [row],
           });
         }
-      });
-    }
+      }
+    });
+
+    collector.on('end', (_collected, reason) => {
+      if (reason === 'idle') {
+        if (row.components.length === 1) row.components[0].setDisabled(true);
+        else {
+          row.components[0].setDisabled(true);
+          row.components[1].setDisabled(true);
+        }
+
+        interaction.editReply({
+          components: [row],
+        });
+      }
+    });
   }
 }

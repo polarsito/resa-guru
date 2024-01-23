@@ -1,5 +1,5 @@
 import { container } from '@sapphire/framework';
-import { bot } from '@src/config.json';
+import { bot } from '@config';
 import { toLocaleString } from './toLocaleString';
 
 export const getTaskProgress = async (

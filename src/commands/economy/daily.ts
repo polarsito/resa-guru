@@ -35,7 +35,7 @@ export class DailyCommand extends Command {
     if (cooldown)
       return interaction
         .editReply({
-          embeds: [new CooldownEmbed(interaction, cooldown)],
+          embeds: [await new CooldownEmbed(interaction, cooldown).get()],
         })
         .then(() => setTimeout(() => interaction.deleteReply(), 1000 * 5));
 
