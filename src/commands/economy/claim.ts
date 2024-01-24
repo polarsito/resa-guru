@@ -154,23 +154,26 @@ export class ClaimCommand extends Command {
         const confirmationCollector =
           confirmReply.createMessageComponentCollector({
             idle: 1000 * 60,
-            filter: (ins: Interaction) => ins.user.id === i.user.id,
+            filter: (ins: ButtonInteraction) => ins.user.id === i.user.id,
             max: 1,
           });
 
         confirmationCollector.on(
           'collect',
           async (collected: ButtonInteraction) => {
+            console.log('xd');
             await collected.deferUpdate();
-            if (collected.user.id === interaction.user.id) {
+            if (collected.customId === 'confirm-sell') {
               const userData = await this.container.db.getUserData(
                 interaction.user.id,
                 ['club']
               );
               const sell = await this.container.db.sellPlayer(
                 collected.user.id,
-                player.name,
-                Object.keys(userData.club!).lastIndexOf(player.name)
+                getPlayerKey(player.name, player.type),
+                Object.keys(userData.club!).lastIndexOf(
+                  getPlayerKey(player.name, player.type)
+                )
               );
               if (sell) {
                 const newEmbed = new RGEmbed(collected.user)
@@ -189,6 +192,7 @@ export class ClaimCommand extends Command {
                   )
                   .setImage(cardImage);
 
+                console.log('lol');
                 i.deleteReply();
                 interaction.editReply({
                   embeds: [newEmbed],

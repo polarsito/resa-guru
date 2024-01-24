@@ -468,4 +468,29 @@ export default class Database {
     const packs = inv.packs;
     return packs;
   }
+
+  // Remove a pack from
+  public async removePack(userId: string, pack: string): Promise<void> {
+    const data = (await this.getUserData(userId, ['inventory']))?.inventory!;
+    if (!data) return;
+
+    const remove = data.packs[pack] - 1 <= 0;
+
+    await users.updateOne(
+      {
+        users,
+      },
+      remove
+        ? {
+            $unset: {
+              [`inventory.packs.${pack}`]: 1,
+            },
+          }
+        : {
+            $inc: {
+              [`inventory.packs.${pack}`]: -1,
+            },
+          }
+    );
+  }
 }

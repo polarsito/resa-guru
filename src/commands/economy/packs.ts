@@ -18,6 +18,10 @@ import { join } from 'path';
 import sharp from 'sharp';
 import { ErrorEmbed } from '@lib/structures/ErrorEmbed';
 import { toLocaleString } from '@lib/utils/toLocaleString';
+import probabilities from '@lib/assets/probabilities.json';
+import { getPlayerKey } from '@lib/utils/players';
+import { getPlayerSellValue } from '@lib/utils/getPlayerSellValue';
+import { getPlayerCard } from '@lib/utils/getPlayerCard';
 
 @ApplyOptions<Command.Options>({
   name: 'packs',
@@ -399,10 +403,121 @@ export class PacksCommand extends Command {
         idle: 1000 * 60,
       });
 
-      collector.on('collect', (collected: StringSelectMenuInteraction) => {
-        if (collected.customId === 'packs-inv-menu') {
+      collector.on(
+        'collect',
+        async (collected: StringSelectMenuInteraction) => {
+          await collected.deferReply();
+
+          if (collected.customId === 'packs-inv-menu') {
+            const pack = collected.values[0];
+            let gif: string;
+
+            const reply = await collected.followUp({
+              content: `${emojis[pack]} **Opening pack...**`,
+            });
+            await this.container.db.removePack(interaction.user.id, pack);
+
+            switch (pack.toLowerCase()) {
+              case 'icon':
+                gif = join(process.cwd(), 'images', 'icon_pack_opening.gif');
+                break;
+
+              case 'super gold':
+                gif = join(
+                  process.cwd(),
+                  'images',
+                  'super_gold_pack_opening.gif'
+                );
+                break;
+
+              case 'gold':
+                gif = join(process.cwd(), 'images', 'gold_pack_opening.gif');
+                break;
+
+              case 'super silver':
+                gif = join(
+                  process.cwd(),
+                  'images',
+                  'super_silver_pack_opening.gif'
+                );
+                break;
+
+              case 'silver':
+                gif = join(process.cwd(), 'images', 'silver_pack_opening.gif');
+                break;
+            }
+
+            const probs = probabilities.packs;
+            const keys = Object.keys(probs);
+
+            const players = Object.values(this.container.players);
+            const plrs = [];
+
+            for (let i = 0; i < keys.length; i++) {
+              const rs = Object.keys(probs[keys[i]]);
+              for (let y = 0; y < rs.length; y++) {
+                const rr = rs[y].split('-');
+                const r1 = Number(rr[0]);
+                const r2 = Number(rr[1]);
+
+                players
+                  .filter(
+                    (p) =>
+                      p.rating >= r1 &&
+                      p.rating <= r2 &&
+                      (pack.toLowerCase() === 'icon' && p.type !== 'ICN'
+                        ? false
+                        : true)
+                  )
+                  .forEach((p) => {
+                    for (
+                      let x = 0;
+                      x < probs[keys[i]][Object.keys(probs[keys[i]])[i]];
+                      x++
+                    ) {
+                      plrs.push(getPlayerKey(p.name, p.type));
+                    }
+                  });
+              }
+            }
+
+            const pickedPlayer = plrs[Math.floor(Math.random() * plrs.length)];
+            const player = this.container.players[pickedPlayer];
+
+            const embed = new RGEmbed()
+              .setTitle(`${player.name} joins your club!`)
+              .setImage(await getPlayerCard(player))
+              .setDescription(
+                `Value \`${toLocaleString(
+                  player.value
+                )}\` -  / Sells for - \`${toLocaleString(
+                  getPlayerSellValue(player.value)
+                )}\``
+              );
+
+            const gifAttachment = new AttachmentBuilder(gif, {
+              name: 'pack-opening.gif',
+            });
+
+            await reply.edit({
+              files: [gifAttachment],
+              content: '',
+            });
+
+            setTimeout(async () => {
+              reply.edit({
+                embeds: [embed],
+                files: [],
+              });
+
+              await this.container.db.addPlayerToClub(
+                interaction.user.id,
+                getPlayerKey(player.name, player.type)
+              );
+            }, 4480);
+          }
         }
-      });
+      );
 
       collector.on('end', (_collected, reason) => {
         if (reason === 'idle') {
